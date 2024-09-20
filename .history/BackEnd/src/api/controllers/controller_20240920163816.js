@@ -79,6 +79,6 @@ const addData = (req, res) => {
     const lichhoc = workBook.Sheets[workBook.SheetNames[2]]
     // insertData(monhoc,insertData2MonHoc,req,res)
     // insertData(lichhoc, insertData2LichHoc, req, res)
-    insertData(lichthi, insertData2LichThi, req, res)
+    // insertData(lichthi, insertData2LichThi, req, res)
 }
 module.exports = {addData }

@@ -98,14 +98,13 @@ const createData = (req, res) => {
         workBook.Sheets[workBook.SheetNames[6]]
     )
     const lichthi = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[7]],
-        { defval: null }
+        workBook.Sheets[workBook.SheetNames[7]],{defval:null}
     )
     const lichhoc = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[8]]
+        workBook.Sheets[workBook.SheetNames[8]],
     )
     randomSubjectData(students, curriculums, req, res)
-    // insertData(lichhoc, insertData2LichHoc, req, res)
+    insertData(lichhoc, insertData2LichHoc, req, res)
     // insertData(majors, insertData2Majors, req, res)
     // insertData(subjects, insertData2Subjects, req, res)
     // insertData(groupSubjects, insertData2Groupsubject, req, res)

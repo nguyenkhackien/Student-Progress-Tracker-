@@ -7,9 +7,6 @@ const {
     insertData2Groupsubject,
     insertData2Students,
     insertData2StudyProgress,
-    insertData2Registration,
-    insertData2LichThi,
-    insertData2LichHoc,
 } = require("../../constants/String")
 const connection = require("../../config/database")
 
@@ -19,39 +16,9 @@ function getRandomSubjects(subjects) {
     return shuffled.slice(0, num).map((item) => item.subject_id)
 }
 
-function serialToDate(serial) {
-    const utc_days = Math.floor(serial - 25569)
-    const utc_value = utc_days * 86400
-    const date_info = new Date(utc_value * 1000)
-
-    const fractional_day = serial - Math.floor(serial) + 0.0000001
-    let total_seconds = Math.floor(86400 * fractional_day)
-
-    const seconds = total_seconds % 60
-    total_seconds -= seconds
-
-    return new Date(
-        Date.UTC(
-            date_info.getFullYear(),
-            date_info.getMonth(),
-            date_info.getDate()
-        )
-    )
-}
-
 function insertData(data, String, req, res) {
     // res.json(Data)
-    data.forEach((row) => {
-        if (
-            row["Ngày sinh"] &&
-            !isNaN(row["Ngày sinh"]) &&
-            row["Ngày sinh"] > 25569
-        ) {
-            row["Ngày sinh"] = serialToDate(
-                row["Ngày sinh"]
-            ).toLocaleDateString("en-GB") // convert serial number to Date time
-        }
-    })
+    console.log(Object.values(data[0]))
     connection.query(
         String,
         [data.map((item) => Object.values(item) || NULL)],
@@ -60,15 +27,12 @@ function insertData(data, String, req, res) {
         }
     )
 }
-function randomSubjectData(students, subjects, req, res) {
-    const values = students.flatMap((student) => {
-        const subject = getRandomSubjects(subjects)
-        return subject.map((sub) => [
-            student.MSSV,
-            sub,
-            Math.floor(Math.random() * 100) / 10,
-        ])
-    })
+function randomSubjectData(students, subjects,req,res) {
+    const values = students
+        .flatMap((student) => {
+            const subject = getRandomSubjects(subjects)
+            return subject.map((sub) => [student.MSSV, sub, Math.random])
+        })
     console.log(values)
     connection.query(insertData2StudyProgress, [values], (err) => {
         res.send(err)
@@ -93,22 +57,12 @@ const createData = (req, res) => {
     const students = xlsx.utils.sheet_to_json(
         workBook.Sheets[workBook.SheetNames[4]]
     )
-
-    const registration = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[6]]
-    )
-    const lichthi = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[7]],
-        { defval: null }
-    )
-    const lichhoc = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[8]]
-    )
     randomSubjectData(students, curriculums, req, res)
-    // insertData(lichhoc, insertData2LichHoc, req, res)
+
     // insertData(majors, insertData2Majors, req, res)
     // insertData(subjects, insertData2Subjects, req, res)
     // insertData(groupSubjects, insertData2Groupsubject, req, res)
     // insertData(curriculums, insertData2Curriculum, req, res)
+    // insertData(students,insertData2Students,req,res)
 }
 module.exports = { createData }

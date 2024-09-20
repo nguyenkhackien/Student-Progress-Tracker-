@@ -1,8 +1,8 @@
 const insertData2Registration = `INSERT INTO Registration (MSSV, hoTen, ngaysinh, class, maLMH, tenMH, nhom, soTC, note, semester_id)
             VALUES ?`
-const insertData2LichHoc = `INSERT INTO lichhoc (maHP, tenMH, TC, maLMH, soSV, Giangvien, thu, tiet, giangduong, nhom)
+const insertData2LichHoc = `INSERT INTO LichHoc (maHP, HP, TC, maLMH, soSV, GV, thu, tiet, giangduong, nhom)
             VALUES ?`
-const insertData2LichThi = `INSERT INTO LichThi (maHP , tenMH, TC, maLMH, Giangvien, SS, HTT, Giothi, thu, ngaythi, phongthi)
+const insertData2LichThi = `INSERT INTO LichThi (maHP , tenMH, TC, maLMH, Giangvien, SS, HTT, Giothi, SS, phongthi, HTT)
             VALUES ?`
 const insertData2Majors = `INSERT INTO Majors (major_id, major_name)
             VALUES ?`

@@ -7,9 +7,6 @@ const {
     insertData2Groupsubject,
     insertData2Students,
     insertData2StudyProgress,
-    insertData2Registration,
-    insertData2LichThi,
-    insertData2LichHoc,
 } = require("../../constants/String")
 const connection = require("../../config/database")
 
@@ -41,17 +38,9 @@ function serialToDate(serial) {
 
 function insertData(data, String, req, res) {
     // res.json(Data)
-    data.forEach((row) => {
-        if (
-            row["Ngày sinh"] &&
-            !isNaN(row["Ngày sinh"]) &&
-            row["Ngày sinh"] > 25569
-        ) {
-            row["Ngày sinh"] = serialToDate(
-                row["Ngày sinh"]
-            ).toLocaleDateString("en-GB") // convert serial number to Date time
-        }
-    })
+    data.array.forEach(element => {
+        
+    });
     connection.query(
         String,
         [data.map((item) => Object.values(item) || NULL)],
@@ -93,22 +82,12 @@ const createData = (req, res) => {
     const students = xlsx.utils.sheet_to_json(
         workBook.Sheets[workBook.SheetNames[4]]
     )
+    // randomSubjectData(students, curriculums, req, res)
 
-    const registration = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[6]]
-    )
-    const lichthi = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[7]],
-        { defval: null }
-    )
-    const lichhoc = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[8]]
-    )
-    randomSubjectData(students, curriculums, req, res)
-    // insertData(lichhoc, insertData2LichHoc, req, res)
     // insertData(majors, insertData2Majors, req, res)
     // insertData(subjects, insertData2Subjects, req, res)
     // insertData(groupSubjects, insertData2Groupsubject, req, res)
     // insertData(curriculums, insertData2Curriculum, req, res)
+    insertData(students,insertData2Students,req,res)
 }
 module.exports = { createData }

@@ -9,7 +9,6 @@ const {
     insertData2StudyProgress,
     insertData2Registration,
     insertData2LichThi,
-    insertData2LichHoc,
 } = require("../../constants/String")
 const connection = require("../../config/database")
 
@@ -98,14 +97,14 @@ const createData = (req, res) => {
         workBook.Sheets[workBook.SheetNames[6]]
     )
     const lichthi = xlsx.utils.sheet_to_json(
+        workBook.Sheets[workBook.SheetNames[7]],{defval:null}
+    )
+    const lichhoc = xlsx.utils.sheet_to_json(
         workBook.Sheets[workBook.SheetNames[7]],
         { defval: null }
     )
-    const lichhoc = xlsx.utils.sheet_to_json(
-        workBook.Sheets[workBook.SheetNames[8]]
-    )
     randomSubjectData(students, curriculums, req, res)
-    // insertData(lichhoc, insertData2LichHoc, req, res)
+    insertData(lichthi, insertData2LichThi, req, res)
     // insertData(majors, insertData2Majors, req, res)
     // insertData(subjects, insertData2Subjects, req, res)
     // insertData(groupSubjects, insertData2Groupsubject, req, res)

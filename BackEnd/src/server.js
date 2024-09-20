@@ -5,7 +5,7 @@ const app = express()
 const port = process.env.PORT //3000
 const connection = require("./config/database")
 
-app.use( router )
+app.use(router)
 
 // get data
 connection.query("SELECT * FROM Accounts", function (err, result, fields) {

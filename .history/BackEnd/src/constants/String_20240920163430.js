@@ -1,8 +1,8 @@
-const insertData2Registration = `INSERT INTO Registration (MSSV, hoTen, ngaysinh, class, maLMH, tenMH, nhom, soTC, note, semester_id)
+const insertData2Registration = `INSERT INTO MonHoc (MSSV, hoTen, ngaysinh, class, maLMH, tenMH, nhom, soTC, note)
             VALUES ?`
-const insertData2LichHoc = `INSERT INTO lichhoc (maHP, tenMH, TC, maLMH, soSV, Giangvien, thu, tiet, giangduong, nhom)
+const insertData2LichHoc = `INSERT INTO LichHoc (maHP, HP, TC, maLMH, soSV, GV, thu, tiet, giangduong, nhom)
             VALUES ?`
-const insertData2LichThi = `INSERT INTO LichThi (maHP , tenMH, TC, maLMH, Giangvien, SS, HTT, Giothi, thu, ngaythi, phongthi)
+const insertData2LichThi = `INSERT INTO LichThi (giothi, thu, ngaythi, maHP, HP, soTC, maLMH, GV, SS, phongthi, HTT)
             VALUES ?`
 const insertData2Majors = `INSERT INTO Majors (major_id, major_name)
             VALUES ?`
@@ -18,7 +18,7 @@ const insertData2Students = `INSERT INTO Students (MSSV, student_name, birth_dat
 const insertData2StudyProgress = `INSERT INTO StudyProgress (MSSV, subject_id, points)
             VALUES ?`
 module.exports = {
-    insertData2Registration,
+    insertData2Re,
     insertData2LichHoc,
     insertData2LichThi,
     insertData2Majors,
