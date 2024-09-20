@@ -36,7 +36,7 @@ const LoginScreen = () => {
                             source={require("../../assets/logo.png")}
                             style={styles.logoIcon}
                         />
-                        <Text style={styles.title}>TRA CỨU UET</Text>
+                        <Text style={styles.title}>Khac kien</Text>
                         <View style={styles.loginContainer}>
                             <Text
                                 style={{
@@ -121,23 +121,10 @@ const LoginScreen = () => {
                                         Đăng Nhập
                                     </Text>
                                 </TouchableOpacity>
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                    }}
-                                >
+                                <View style={{ flexDirection: 'row',justifyContent:'center',alignItems:'center'}}>
                                     <Text>Chưa có tài khoản? </Text>
                                     <TouchableOpacity>
-                                        <Text
-                                            style={{
-                                                fontWeight: "bold",
-                                                color: primaryColor,
-                                            }}
-                                        >
-                                            Đăng Ký
-                                        </Text>
+                                        <Text style={{fontWeight:'bold',color:primaryColor}}>Đăng Ký</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>

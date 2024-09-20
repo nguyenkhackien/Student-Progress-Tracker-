@@ -2,7 +2,7 @@ const insertData2Registration = `INSERT INTO Registration (MSSV, hoTen, ngaysinh
             VALUES ?`
 const insertData2LichHoc = `INSERT INTO lichhoc (maHP, tenMH, TC, maLMH, soSV, Giangvien, thu, tiet, giangduong, nhom, semester_id)
             VALUES ?`
-const insertData2LichThi = `INSERT INTO LichThi (maHP , tenMH, TC, maLMH, Giangvien, SS, HTT, Giothi, thu, ngaythi, phongthi, semester_id)
+const insertData2LichThi = `INSERT INTO LichThi (maHP , tenMH, TC, maLMH, Giangvien, SS, HTT, Giothi, thu, ngaythi, phongthi,)
             VALUES ?`
 const insertData2Majors = `INSERT INTO Majors (major_id, major_name)
             VALUES ?`

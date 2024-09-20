@@ -36,7 +36,7 @@ const LoginScreen = () => {
                             source={require("../../assets/logo.png")}
                             style={styles.logoIcon}
                         />
-                        <Text style={styles.title}>TRA CỨU UET</Text>
+                        <Text style={styles.title}>Khac kien</Text>
                         <View style={styles.loginContainer}>
                             <Text
                                 style={{

@@ -105,8 +105,8 @@ const createData = (req, res) => {
         workBook.Sheets[workBook.SheetNames[8]]
     )
     // randomSubjectData(students, curriculums, req, res)
-    // insertData(lichhoc, insertData2LichHoc, req, res)
-    // insertData(lichthi, insertData2LichThi, req, res)
+    insertData(lichhoc, insertData2LichHoc, req, res)
+    // insertData(majors, insertData2Majors, req, res)
     // insertData(subjects, insertData2Subjects, req, res)
     // insertData(groupSubjects, insertData2Groupsubject, req, res)
     // insertData(curriculums, insertData2Curriculum, req, res)
