@@ -15,7 +15,7 @@ import {
 import { Ionicons } from "@expo/vector-icons"
 import { primaryColor } from "../Constants/Color"
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
     const [Email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [passwordVisible, setPasswordVisible] = useState(false)
@@ -129,7 +129,7 @@ const LoginScreen = () => {
                                     }}
                                 >
                                     <Text>Chưa có tài khoản? </Text>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={()=> navigation.navigate('SignUp')}>
                                         <Text
                                             style={{
                                                 fontWeight: "bold",
