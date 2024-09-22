@@ -31,7 +31,6 @@ const DataComponent = (props) => {
                     flexDirection: "row",
                 }}
             >
-                <Feather name="search" size={24} color="black" />
                 <TextInput
                     style={{ flex: 1, marginLeft: 10, height: 40 }}
                     value={searchMsv}
@@ -39,6 +38,7 @@ const DataComponent = (props) => {
                     placeholder="Tìm kiếm theo MSV..."
                     placeholderTextColor="gray"
                 />
+                <Feather name="search" size={24} color="black" />
             </View>
             <View style={styles.container}>
                 <View

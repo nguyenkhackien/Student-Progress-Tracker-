@@ -185,7 +185,7 @@ const data = [
         nhom: "CL",
     },
 ]
-export default function SearchScreen() {
+export default function SearchScreen({navigation}) {
     const [selectedhocky, setSelectedhocky] = useState() //lay value
     const [selectedColumn, setSelectedColumn] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
@@ -261,9 +261,9 @@ export default function SearchScreen() {
                 >
                     <View
                         style={{
-                            borderWidth: 1, // Độ dày đường viền
-                            borderColor: "#ccc", // Màu đường viền
-                            borderRadius: 5, // Bo tròn góc của đường viền
+                            borderWidth: 1,
+                            borderColor: "#ccc", 
+                            borderRadius: 5, 
                             overflow: "hidden", // Đảm bảo các góc bo tròn hiển thị chính xác
                             width: 100,
                             height: 50,

@@ -8,22 +8,61 @@ import {
     ImageBackground,
     TouchableWithoutFeedback,
     Keyboard,
+    Alert,
     Button,
     TouchableHighlight,
     Pressable,
+    ActivityIndicator,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { primaryColor } from "../Constants/Color"
+import { useDispatch } from "react-redux"
+import { login } from "../reducers/AuthSlice"
+import { useSelector } from "react-redux"
 
-const LoginScreen = ({navigation}) => {
-    const [Email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+const LoginScreen = ({ navigation }) => {
+    const [Account, setAccount] = useState("")
+    const [Password, setPassword] = useState("")
     const [passwordVisible, setPasswordVisible] = useState(false)
-
+    const dispatch = useDispatch()
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible)
     }
+    const [isLoading, setLoading] = useState(false)
+    const handleLogin = async () => {
+        if (!Password || !Account) {
+            Alert.alert("Error", "Please fill in all fields")
+            return
+        }
 
+        setLoading(true)
+        try {
+            const response = await fetch("http://192.168.0.103:3000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    Account,
+                    Password,
+                }),
+            })
+            const data = await response.json()
+            if (response.status === 201) {
+                dispatch(login(data))
+                navigation.replace("HomeTab2")
+                Alert.alert("Success", "login successfully")
+            } else if (response.status === 400) {
+                Alert.alert("Error", data.message)
+            } else {
+                Alert.alert("Error", "Something went wrong")
+            }
+        } catch (error) {
+            Alert.alert(`${error}`, `Failed to login `)
+        } finally {
+            setLoading(false)
+        }
+    }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
@@ -54,17 +93,17 @@ const LoginScreen = ({navigation}) => {
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
-                                    onChangeText={setEmail}
-                                    value={Email}
-                                    placeholder="Email"
+                                    onChangeText={setAccount}
+                                    value={Account}
+                                    placeholder="Tên đăng nhập"
                                 />
                             </View>
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
                                     onChangeText={setPassword}
-                                    value={password}
-                                    placeholder="Password"
+                                    value={Password}
+                                    placeholder="mật khẩu"
                                     secureTextEntry={!passwordVisible}
                                 />
                                 <TouchableOpacity
@@ -103,24 +142,34 @@ const LoginScreen = ({navigation}) => {
                                     marginVertical: 20,
                                 }}
                             >
-                                <TouchableOpacity
-                                    style={{
-                                        width: "90%",
-                                        height: 60,
-                                        backgroundColor: "blue",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        borderRadius: 30,
-                                        marginBottom: 20,
-                                    }}
-                                    onPress={() => {}}
-                                >
-                                    <Text
-                                        style={{ color: "white", fontSize: 20 }}
+                                {!isLoading ? (
+                                    <TouchableOpacity
+                                        style={{
+                                            width: "90%",
+                                            height: 60,
+                                            backgroundColor: "blue",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            borderRadius: 30,
+                                            marginBottom: 20,
+                                        }}
+                                        onPress={handleLogin}
                                     >
-                                        Đăng Nhập
-                                    </Text>
-                                </TouchableOpacity>
+                                        <Text
+                                            style={{
+                                                color: "white",
+                                                fontSize: 20,
+                                            }}
+                                        >
+                                            Đăng Nhập
+                                        </Text>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <ActivityIndicator
+                                        size={"large"}
+                                        color={primaryColor}
+                                    ></ActivityIndicator>
+                                )}
                                 <View
                                     style={{
                                         flexDirection: "row",
@@ -129,7 +178,11 @@ const LoginScreen = ({navigation}) => {
                                     }}
                                 >
                                     <Text>Chưa có tài khoản? </Text>
-                                    <TouchableOpacity onPress={()=> navigation.navigate('SignUp')}>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            navigation.navigate("SignUp")
+                                        }
+                                    >
                                         <Text
                                             style={{
                                                 fontWeight: "bold",

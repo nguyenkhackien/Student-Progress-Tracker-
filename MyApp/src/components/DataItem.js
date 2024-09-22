@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View ,TouchableOpacity} from "react-native"
 import LoginScreen from "./LoginScreen"
 const DataItem = (props) => {
     const { data } = props
     return (
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container}>
             <View
                 style={[styles.column, { width: "20%", borderRightWidth: 1 }]}
             >
@@ -33,7 +33,7 @@ const DataItem = (props) => {
             >
                 <Text>{data.nhom}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 export default DataItem

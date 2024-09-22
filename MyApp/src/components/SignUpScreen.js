@@ -8,6 +8,9 @@ import {
     TouchableOpacity,
     ImageBackground,
     TextInput,
+    Alert,
+    Button,
+    ActivityIndicator,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { primaryColor } from "../Constants/Color"
@@ -25,6 +28,48 @@ const SignUpScreen = ({ navigation }) => {
     const togglePasswordAgainVisibility = () => {
         setPasswordAgainVisible(!passwordAgainVisible)
     }
+
+    const [isLoading, setLoading] = useState(false)
+    const handleRegister = async () => {
+        if (!UserName || !Password || !Account) {
+            Alert.alert("Error", "Please fill in all fields")
+            return
+        }
+        
+        setLoading(true)
+        try {
+            console.log("test")
+            const response = await fetch(
+                "http://192.168.0.103:3000/register",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        UserName,
+                        Account,
+                        Password,
+                    }),
+                }
+            )
+            console.log(response.status)
+            const data = await response.json()
+
+            if (response.status === 201) {
+                Alert.alert("Success", "User registered successfully")
+            } else if (response.status === 400) {
+                Alert.alert("Error", data.message)
+            } else {
+                Alert.alert("Error", "Something went wrong")
+            }
+        } catch (error) {
+            Alert.alert(`${error}`, `Failed to register user `)
+        } finally {
+            setLoading( false )
+            navigation.navigate("Login")
+        }
+    }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
@@ -32,7 +77,7 @@ const SignUpScreen = ({ navigation }) => {
                     source={require("../../assets/bgc.png")}
                     style={{ width: "100%", height: "100%" }}
                 >
-                    <View style={{alignItems:"center"}}>
+                    <View style={{ alignItems: "center" }}>
                         <Text style={styles.title}>TRA CỨU UET</Text>
                     </View>
                     <View style={styles.container}>
@@ -109,7 +154,7 @@ const SignUpScreen = ({ navigation }) => {
                                 marginVertical: 20,
                             }}
                         >
-                            <TouchableOpacity
+                            {!isLoading?<TouchableOpacity
                                 style={{
                                     width: "90%",
                                     height: 60,
@@ -119,12 +164,14 @@ const SignUpScreen = ({ navigation }) => {
                                     borderRadius: 30,
                                     marginBottom: 20,
                                 }}
-                                onPress={() => {}}
+                                onPress={handleRegister}
                             >
                                 <Text style={{ color: "white", fontSize: 20 }}>
                                     Đăng Ký
                                 </Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> : <ActivityIndicator size={"large"} color={primaryColor}>
+                                    
+                            </ActivityIndicator>}
                             <View
                                 style={{
                                     flexDirection: "row",
