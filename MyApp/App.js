@@ -12,6 +12,8 @@ import LoginScreen from "./src/components/LoginScreen"
 import { useState } from "react"
 import SearchScreen from "./src/components/SearchSreen"
 import { Provider } from "react-redux"
+import SignUpScreen from "./src/components/SignUpScreen"
+import ForgotPassWordScreen from "./src/components/ForgotPasswordScreen"
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
@@ -78,13 +80,9 @@ const HomeTab2 = () => {
                 name="Search"
                 component={SearchScreen}
                 options={{
-                    tabBarIcon: ({focused,size,color}) => {
+                    tabBarIcon: ({ focused, size, color }) => {
                         return (
-                            <Ionicons
-                                name={"search"}
-                                size={28}
-                                color={color}
-                            />
+                            <Ionicons name={"search"} size={28} color={color} />
                         )
                     },
                 }}
@@ -93,7 +91,7 @@ const HomeTab2 = () => {
                 name="MySchedule"
                 component={MyScheduleScreen} // Kiểm tra trạng thái login
                 options={{
-                    tabBarIcon: (color) => {
+                    tabBarIcon: ({ focused, size, color }) => {
                         return (
                             <Ionicons
                                 name={"calendar"}
@@ -108,13 +106,9 @@ const HomeTab2 = () => {
                 name="Account"
                 component={AccountScreen} // Kiểm tra trạng thái login
                 options={{
-                    tabBarIcon: (color) => {
+                    tabBarIcon: ({ focused, size, color }) => {
                         return (
-                            <Ionicons
-                                name={"person"}
-                                size={28}
-                                color={color}
-                            />
+                            <Ionicons name={"person"} size={28} color={color} />
                         )
                     },
                 }}
@@ -129,12 +123,24 @@ export default function App() {
                 <NavigationContainer>
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                         <>
-                            {/* <Stack.Screen name="LoginScreen" component={LoginScreen} /> */}
                             <Stack.Screen name="HomeTab" component={HomeTab} />
                             <Stack.Screen
                                 name="HomeTab2"
                                 component={HomeTab2}
                             />
+                            <Stack.Screen
+                                name="LoginScreen"
+                                component={LoginScreen}
+                            />
+                            <Stack.Screen
+                                name="SignUp"
+                                component={SignUpScreen}
+                            />
+                            <Stack.Screen
+                                name="ForgotPassword"
+                                component={ForgotPassWordScreen}
+                            />
+                            
                         </>
                     </Stack.Navigator>
                 </NavigationContainer>

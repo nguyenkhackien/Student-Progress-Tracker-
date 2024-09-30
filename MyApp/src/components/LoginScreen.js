@@ -37,13 +37,13 @@ const LoginScreen = ({ navigation }) => {
 
         setLoading(true)
         try {
-            const response = await fetch("http://192.168.0.103:3000/login", {
+            const response = await fetch("http://192.168.0.108:3000/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    Account,
+                     Account,
                     Password,
                 }),
             })
@@ -128,7 +128,7 @@ const LoginScreen = ({ navigation }) => {
                                     marginRight: 8,
                                 }}
                                 onPress={() => {
-                                    console.log("click")
+                                    navigation.navigate("ForgotPassword")
                                 }}
                             >
                                 <Text style={{ color: primaryColor }}>

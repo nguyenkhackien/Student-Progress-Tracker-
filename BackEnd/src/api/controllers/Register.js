@@ -1,7 +1,7 @@
 const connection = require("../../config/database")
 const bcrypt = require("bcrypt")
 const register = async (req, res) => {
-    const { UserName, Account, Password } = req.body
+    const { UserName, Account, Password, Email } = req.body
     try {
         const [existAccount] = await connection
             .promise()
@@ -29,10 +29,11 @@ const register = async (req, res) => {
         await connection
             .promise()
             .query(
-                "INSERT INTO Accounts (user_name,tk, pass, create_time,role,isLogin) VALUES (?,?,?,?,?,?)",
+                "INSERT INTO Accounts (user_name,tk, Email, pass, create_time,role,isLogin) VALUES (?,?,?,?,?,?,?)",
                 [
                     UserName,
                     Account,
+                    Email,
                     hashedPassword,
                     formattedDate,
                     "USER",

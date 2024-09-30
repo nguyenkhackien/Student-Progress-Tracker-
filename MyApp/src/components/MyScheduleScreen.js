@@ -1,8 +1,16 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View ,Modal,Button} from "react-native"
 import { Agenda } from "react-native-calendars"
 import { useState,useEffect } from "react"
 export default function MyScheduleScreen() {
-    
+    const [modalVisible, setModalVisible] = useState(false); // State để quản lý modal
+
+  const handlePress = () => {
+    setModalVisible(true); // Hiển thị modal khi nhấn vào item
+  };
+
+  const closeModal = () => {
+    setModalVisible(false); // Đóng modal
+  };
     const data = [
         {
             MSSV: "20020679",
@@ -138,7 +146,7 @@ export default function MyScheduleScreen() {
     // Thiết lập đánh dấu cho tất cả các ngày trong scheduleData
     const renderItem = (item) => {
         return (
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity style={styles.item} onPress={handlePress}>
                 <Text style={{ fontSize: 17, fontWeight: "bold" }}>
                     {item.name}
                 </Text>
@@ -148,6 +156,41 @@ export default function MyScheduleScreen() {
     }
     return (
         <View style={styles.container}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={closeModal} // Đóng modal khi nhấn nút back trên Android
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>
+                            Mã môn học: ELT3241
+                        </Text>
+                        <Text style={styles.modalText}>
+                            Mã lớp môn học: ELT3241 1
+                        </Text>
+                        <Text style={styles.modalText}>
+                            Tên môn học: Các vấn đề hiện đại của Kỹ thuật máy
+                            tính
+                        </Text>
+                        <Text style={styles.modalText}>
+                            Lịch học: Thứ 7(tiết 2-3){" "}
+                        </Text>
+                        <Text style={styles.modalText}>
+                            Lớp: QH-2020-I/CQ-K
+                        </Text>
+                        <Text style={styles.modalText}>
+                            Giảng đường: 302-GĐ2
+                        </Text>
+                        <Text style={styles.modalText}>
+                            Giảng Viên: TS. Đinh Triều Dương
+                        </Text>
+                        {/* Nút đóng modal */}
+                        <Button title="Đóng" onPress={closeModal} />
+                    </View>
+                </View>
+            </Modal>
             <Agenda
                 items={filteredItems}
                 onDayPress={(day) => {
@@ -170,5 +213,22 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10,
         borderRadius: 10,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.5)", // Nền trong suốt phía sau modal
+    },
+    modalContent: {
+        width: 300,
+        padding: 20,
+        backgroundColor: "white",
+        borderRadius: 10,
+        elevation: 5,
+    },
+    modalText: {
+        marginBottom: 10,
+        fontSize: 16,
     },
 })

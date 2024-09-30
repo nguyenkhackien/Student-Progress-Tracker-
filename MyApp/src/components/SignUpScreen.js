@@ -18,6 +18,7 @@ import { primaryColor } from "../Constants/Color"
 const SignUpScreen = ({ navigation }) => {
     const [Account, setAccount] = useState("")
     const [UserName, setUserName] = useState("")
+    const [Email, setEmail] = useState("")
     const [Password, setPass] = useState("")
     const [PasswordAgain, setPassAgain] = useState("")
     const [passwordVisible, setPasswordVisible] = useState(false)
@@ -31,16 +32,16 @@ const SignUpScreen = ({ navigation }) => {
 
     const [isLoading, setLoading] = useState(false)
     const handleRegister = async () => {
-        if (!UserName || !Password || !Account) {
-            Alert.alert("Error", "Please fill in all fields")
+        if (!UserName || !Password || !Account || !Email) {
+            Alert.alert("Error", "Hãy nhập đầy đủ thông tin")
             return
         }
-        
+
         setLoading(true)
         try {
             console.log("test")
             const response = await fetch(
-                "http://192.168.0.103:3000/register",
+                "http://192.168.0.108:3000/register",
                 {
                     method: "POST",
                     headers: {
@@ -50,6 +51,7 @@ const SignUpScreen = ({ navigation }) => {
                         UserName,
                         Account,
                         Password,
+                        Email,
                     }),
                 }
             )
@@ -58,16 +60,18 @@ const SignUpScreen = ({ navigation }) => {
 
             if (response.status === 201) {
                 Alert.alert("Success", "User registered successfully")
+                setLoading(false)
+                navigation.navigate("LoginScreen")
             } else if (response.status === 400) {
                 Alert.alert("Error", data.message)
+                setLoading(false)
             } else {
                 Alert.alert("Error", "Something went wrong")
+                setLoading(false)
             }
         } catch (error) {
             Alert.alert(`${error}`, `Failed to register user `)
-        } finally {
-            setLoading( false )
-            navigation.navigate("Login")
+            setLoading(false)
         }
     }
     return (
@@ -99,6 +103,15 @@ const SignUpScreen = ({ navigation }) => {
                                 onChangeText={setAccount}
                                 value={Account}
                                 placeholder="Tên đăng nhập"
+                                keyboardType="numeric"
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={setEmail}
+                                value={Email}
+                                placeholder="Email"
                             />
                         </View>
                         <View style={styles.inputContainer}>
@@ -154,24 +167,31 @@ const SignUpScreen = ({ navigation }) => {
                                 marginVertical: 20,
                             }}
                         >
-                            {!isLoading?<TouchableOpacity
-                                style={{
-                                    width: "90%",
-                                    height: 60,
-                                    backgroundColor: "blue",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    borderRadius: 30,
-                                    marginBottom: 20,
-                                }}
-                                onPress={handleRegister}
-                            >
-                                <Text style={{ color: "white", fontSize: 20 }}>
-                                    Đăng Ký
-                                </Text>
-                            </TouchableOpacity> : <ActivityIndicator size={"large"} color={primaryColor}>
-                                    
-                            </ActivityIndicator>}
+                            {!isLoading ? (
+                                <TouchableOpacity
+                                    style={{
+                                        width: "90%",
+                                        height: 60,
+                                        backgroundColor: "blue",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        borderRadius: 30,
+                                        marginBottom: 20,
+                                    }}
+                                    onPress={handleRegister}
+                                >
+                                    <Text
+                                        style={{ color: "white", fontSize: 20 }}
+                                    >
+                                        Đăng Ký
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <ActivityIndicator
+                                    size={"large"}
+                                    color={primaryColor}
+                                ></ActivityIndicator>
+                            )}
                             <View
                                 style={{
                                     flexDirection: "row",
@@ -203,7 +223,7 @@ const SignUpScreen = ({ navigation }) => {
 const styles = {
     container: {
         width: "90%",
-        height: "85%",
+        height: "83%",
         backgroundColor: "white",
         margin: "auto",
         borderRadius: 10,
