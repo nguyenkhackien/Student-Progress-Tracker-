@@ -4,10 +4,16 @@ const transporter = require("../../config/nodemailer")
 
 const sendOTP = async (req, res) => {
     const { Email, Account } = req.body
+    const generateOTP = () =>
+        Math.floor(100000 + Math.random() * 900000).toString()
+    const OTP = generateOTP()
     try {
         const [existAccount] = await connection
-             .promise()
-            .query( "SELECT * FROM Accounts WHERE tk = ? AND Email = ?", [ Account,Email ],  )
+            .promise()
+            .query("SELECT * FROM Accounts WHERE tk = ? AND Email = ?", [
+                Account,
+                Email,
+            ])
 
         if (existAccount.length === 0) {
             // Nếu không tìm thấy email
@@ -22,11 +28,10 @@ const sendOTP = async (req, res) => {
                 to: Email, // list of receivers
                 subject: "verification", // Subject line
                 text: "your verification code is", // plain text body
-                html: "<b>123456<b>", // html body
+                html: `<b>${OTP}<b>`, // html body
             },
             (error) => {
-                if ( error )
-                {
+                if (error) {
                     return res.status(500).json({
                         success: false,
                         message: "Lỗi khi gửi email",

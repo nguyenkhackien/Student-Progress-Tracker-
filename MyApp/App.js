@@ -14,6 +14,7 @@ import SearchScreen from "./src/components/SearchSreen"
 import { Provider } from "react-redux"
 import SignUpScreen from "./src/components/SignUpScreen"
 import ForgotPassWordScreen from "./src/components/ForgotPasswordScreen"
+import VerificationScreen from "./src/components/VerificationScreen"
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
@@ -140,7 +141,10 @@ export default function App() {
                                 name="ForgotPassword"
                                 component={ForgotPassWordScreen}
                             />
-                            
+                            <Stack.Screen
+                                name="Verification"
+                                component={VerificationScreen}
+                            />
                         </>
                     </Stack.Navigator>
                 </NavigationContainer>

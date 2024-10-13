@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import {
     View,
     TextInput,
@@ -12,19 +12,19 @@ import {
 } from "react-native"
 import { primaryColor } from "../Constants/Color"
 
-const ForgotPassWordScreen = ({ navigation }) => {
+const ForgotPassWordScreen = ( { navigation }) => {
     const [Account, setAccount] = useState("")
     const [Email, setEmail] = useState("")
     const [modalVisible, setModalVisible] = useState(false)
     const [isLoading, setLoading] = useState(false)
-
+    
     const handlerSendOTP = async () => {
         if (!Account || !Email) {
             Alert.alert("Error", "Hãy nhập đầy đủ thông tin")
             return
         }
         try {
-            const response = await fetch("http://192.168.0.108:3000/sendOTP", {
+            const response = await fetch("http://192.168.0.103:3000/sendOTP", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -41,7 +41,8 @@ const ForgotPassWordScreen = ({ navigation }) => {
             if (response.status === 200) {
                 // Alert.alert("Success", "gửi mã thành công")
                 setLoading(false)
-                setModalVisible(true)
+                setModalVisible( true )
+                navigation.navigate("Verification", {email:Email})
             } else if (response.status === 400) {
                 Alert.alert("Error", data.message)
                 setLoading(false)
@@ -123,7 +124,7 @@ const ForgotPassWordScreen = ({ navigation }) => {
                     </View>
                 </ImageBackground>
             </View>
-            <Modal
+            {/* <Modal
                 visible={modalVisible}
                 transparent={true}
                 animationType="slide"
@@ -136,15 +137,69 @@ const ForgotPassWordScreen = ({ navigation }) => {
                         flex: 1,
                     }}
                 >
-                    <Text style={{ fontWeight: "bold", fontSize: 25 }}>
+                    <Text style={{ fontWeight: "bold", fontSize: 30 }}>
                         verification
                     </Text>
-                    <Text>
+                    <Text style={{fontSize:20}}>
                         nhập mã xác minh đã được gửi qua email:
                         {Email.replace(/(.{6})/, "******")}
                     </Text>
+                    <View style={styles.OTPcontainer}>
+                        <TextInput
+                            style={styles.inputOTP}
+                            keyboardType="numeric"
+                            ref={ref1}
+                            maxLength={1}
+                            onChange={(val) => {
+                                val && ref2.current.focus()
+                            }}
+                        ></TextInput>
+                        <TextInput
+                            style={styles.inputOTP}
+                            keyboardType="numeric"
+                            ref={ref2}
+                            maxLength={1}
+                            onChange={(val) => {
+                                val && ref3.current.focus()
+                            }}
+                        ></TextInput>
+                        <TextInput
+                            style={styles.inputOTP}
+                            keyboardType="numeric"
+                            ref={ref3}
+                            maxLength={1}
+                            onChange={(val) => {
+                                val && ref4.current.focus()
+                            }}
+                        ></TextInput>
+                        <TextInput
+                            style={styles.inputOTP}
+                            keyboardType="numeric"
+                            ref={ref4}
+                            maxLength={1}
+                            onChange={(val) => {
+                                val && ref5.current.focus()
+                            }}
+                        ></TextInput>
+                        <TextInput
+                            style={styles.inputOTP}
+                            keyboardType="numeric"
+                            ref={ref5}
+                            maxLength={1}
+                            onChange={(val) => {
+                                val && ref6.current.focus()
+                            }}
+                        ></TextInput>
+                        <TextInput
+                            style={styles.inputOTP}
+                            keyboardType="numeric"
+                            ref={ref6}
+                            maxLength={1}
+                        ></TextInput>
+                    </View>
+                    <Button title="countinue" ></Button>
                 </View>
-            </Modal>
+            </Modal> */}
         </>
     )
 }
@@ -173,6 +228,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         marginRight: 8,
     },
+    
 })
 
 export default ForgotPassWordScreen
