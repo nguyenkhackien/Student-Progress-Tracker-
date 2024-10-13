@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
     View,
     Text,
@@ -28,6 +28,7 @@ const LoginScreen = ({ navigation }) => {
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible)
     }
+
     const [isLoading, setLoading] = useState(false)
     const handleLogin = async () => {
         if (!Password || !Account) {
@@ -37,19 +38,19 @@ const LoginScreen = ({ navigation }) => {
 
         setLoading(true)
         try {
-            const response = await fetch("http://192.168.0.103:3000/login", {
+            const response = await fetch("http://192.168.0.109:3000/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                     Account,
+                    Account,
                     Password,
                 }),
             })
             const data = await response.json()
             if (response.status === 201) {
-                dispatch(login(data))
+                dispatch(login(data.user))
                 navigation.replace("HomeTab2")
                 Alert.alert("Success", "login successfully")
             } else if (response.status === 400) {

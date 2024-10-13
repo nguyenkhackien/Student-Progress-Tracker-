@@ -15,6 +15,8 @@ import { Provider } from "react-redux"
 import SignUpScreen from "./src/components/SignUpScreen"
 import ForgotPassWordScreen from "./src/components/ForgotPasswordScreen"
 import VerificationScreen from "./src/components/VerificationScreen"
+import ChangePasswordScreen from "./src/components/ChangePasswordScreen"
+import EditInfo from "./src/components/EditInfo"
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
@@ -30,13 +32,9 @@ const HomeTab = () => {
                 name="Search"
                 component={SearchScreen}
                 options={{
-                    tabBarIcon: ({color}) => {
+                    tabBarIcon: ({ color }) => {
                         return (
-                            <Ionicons
-                                name={"search"}
-                                size={28}
-                                color={color}
-                            />
+                            <Ionicons name={"search"} size={28} color={color} />
                         )
                     },
                 }}
@@ -45,7 +43,7 @@ const HomeTab = () => {
                 name="MySchedule"
                 component={LoginScreen} // Kiểm tra trạng thái login
                 options={{
-                    tabBarIcon: ({color}) => {
+                    tabBarIcon: ({ color }) => {
                         return (
                             <Ionicons
                                 name={"calendar"}
@@ -60,13 +58,9 @@ const HomeTab = () => {
                 name="Account"
                 component={LoginScreen} // Kiểm tra trạng thái login
                 options={{
-                    tabBarIcon: ({color}) => {
+                    tabBarIcon: ({ color }) => {
                         return (
-                            <Ionicons
-                                name={"person"}
-                                size={28}
-                                color={color}
-                            />
+                            <Ionicons name={"person"} size={28} color={color} />
                         )
                     },
                 }}
@@ -144,6 +138,14 @@ export default function App() {
                             <Stack.Screen
                                 name="Verification"
                                 component={VerificationScreen}
+                            />
+                            <Stack.Screen
+                                name="ChangePasswordScreen"
+                                component={ChangePasswordScreen}
+                            />
+                            <Stack.Screen
+                                name="EditInfoScreen"
+                                component={EditInfo}
                             />
                         </>
                     </Stack.Navigator>

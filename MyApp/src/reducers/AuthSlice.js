@@ -6,20 +6,20 @@ const authSlice = createSlice({
         isLoggedIn: false,
         Account: null,
         Role: null,
-        user_name: null,
+        User_name: null,
     },
     reducers: {
         login: (state, action) => {
-            state.isLoggedIn = action.payload.isrLogIn
+            state.isLoggedIn = action.payload.isLogIn
             state.Account = action.payload.Account
             state.Role = action.payload.Role
-            state.user_name = action.payload.UserName
+            state.User_name = action.payload.UserName
         },
         logout: (state) => {
             state.isLoggedIn = false
             state.Account = null
             state.Role = null
-            state.user_name = null
+            state.User_name = null
         },
     },
 })

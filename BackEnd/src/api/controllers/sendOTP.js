@@ -1,20 +1,22 @@
-const nodemailer = require("nodemailer")
 const connection = require("../../config/database")
-const transporter = require("../../config/nodemailer")
-
+const transporter = require( "../../config/nodemailer" )
+require("dotenv").config()
+const jwt = require("jsonwebtoken")
 const sendOTP = async (req, res) => {
-    const { Email, Account } = req.body
+    const {  Account } = req.body
+    const OTP_SECRET = process.env.OTP_SECRET 
+    const OTP_EXPIRY = "5m" 
     const generateOTP = () =>
         Math.floor(100000 + Math.random() * 900000).toString()
     const OTP = generateOTP()
+    const token = jwt.sign({ OTP }, OTP_SECRET, { expiresIn: OTP_EXPIRY })
+
     try {
         const [existAccount] = await connection
             .promise()
-            .query("SELECT * FROM Accounts WHERE tk = ? AND Email = ?", [
+            .query("SELECT Email FROM Accounts WHERE tk = ? ", [
                 Account,
-                Email,
             ])
-
         if (existAccount.length === 0) {
             // Nếu không tìm thấy email
             return res.status(404).json({
@@ -25,10 +27,10 @@ const sendOTP = async (req, res) => {
         await transporter.sendMail(
             {
                 from: "Tra cứu UET", // sender address
-                to: Email, // list of receivers
+                to: existAccount[0].Email, // list of receivers
                 subject: "verification", // Subject line
                 text: "your verification code is", // plain text body
-                html: `<b>${OTP}<b>`, // html body
+                html: `Mã xác nhận của bạn là: <b>${OTP}<b>`, // html body
             },
             (error) => {
                 if (error) {
@@ -41,6 +43,8 @@ const sendOTP = async (req, res) => {
                 res.status(200).json({
                     success: true,
                     message: "Mã OTP đã được gửi thành công",
+                    token: token,
+                    Email: existAccount[0]
                 })
             }
         )

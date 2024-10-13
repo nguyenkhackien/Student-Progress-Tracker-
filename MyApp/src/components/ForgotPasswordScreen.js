@@ -14,35 +14,28 @@ import { primaryColor } from "../Constants/Color"
 
 const ForgotPassWordScreen = ( { navigation }) => {
     const [Account, setAccount] = useState("")
-    const [Email, setEmail] = useState("")
-    const [modalVisible, setModalVisible] = useState(false)
     const [isLoading, setLoading] = useState(false)
     
     const handlerSendOTP = async () => {
-        if (!Account || !Email) {
+        if (!Account ) {
             Alert.alert("Error", "Hãy nhập đầy đủ thông tin")
             return
         }
         try {
-            const response = await fetch("http://192.168.0.103:3000/sendOTP", {
+            const response = await fetch("http://192.168.0.109:3000/sendOTP", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    Email,
                     Account,
                 }),
             })
             const data = await response.json()
-
-            console.log(Email)
-            console.log(response.status)
             if (response.status === 200) {
                 // Alert.alert("Success", "gửi mã thành công")
                 setLoading(false)
-                setModalVisible( true )
-                navigation.navigate("Verification", {email:Email})
+                navigation.navigate("Verification", {email:data.Email.Email,token: data.token, Account:Account})
             } else if (response.status === 400) {
                 Alert.alert("Error", data.message)
                 setLoading(false)
@@ -87,15 +80,15 @@ const ForgotPassWordScreen = ( { navigation }) => {
                                 keyboardType="numeric"
                             />
                         </View>
-                        <Text style={{ marginBottom: 10 }}>Email</Text>
-                        <View style={styles.inputContainer}>
+                        {/* <Text style={{ marginBottom: 10 }}>Email</Text> */}
+                        {/* <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.input}
                                 onChangeText={setEmail}
                                 value={Email}
                                 placeholder="Email"
                             />
-                        </View>
+                        </View> */}
                         <TouchableOpacity
                             style={{
                                 justifyContent: "flex-end",
