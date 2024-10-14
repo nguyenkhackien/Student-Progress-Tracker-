@@ -12,7 +12,7 @@ const DataComponent = (props) => {
     // Cắt mảng data dựa trên số trang hiện tại
     const paginatedData = data.slice(startIndex, endIndex)
     const filteredData = data.filter((item) =>
-        item.msv.trim().includes(searchMsv.trim())
+        item.MSSV.trim().includes(searchMsv.trim())
     )
     const displayedData = searchMsv
         ? filteredData

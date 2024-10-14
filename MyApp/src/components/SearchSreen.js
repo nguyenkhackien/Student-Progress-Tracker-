@@ -6,191 +6,60 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Alert,
 } from "react-native"
 import { Picker } from "@react-native-picker/picker"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import React from "react"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6"
 import AntDesign from "@expo/vector-icons/AntDesign"
 import DataComponent from "./DataComponent"
 import Feather from "@expo/vector-icons/Feather"
-const data = [
-    {
-        msv: "31020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề hiện đại của Kỹ thuật máy tính",
-        nhom: "CL",
-    },
-    {
-        msv: "21020278",
-        hvt: "Nguyễn Việt Anh",
-        mmh: "INT3507 50",
-        tmh: "LT hướng đối tượng",
-        nhom: "CL",
-    },
-    {
-        msv: "21020275",
-        hvt: "Nguyễn Việt Anh",
-        mmh: "INT3507 50",
-        tmh: "LT căn bản",
-        nhom: "CL",
-    },
-    {
-        msv: "21020276",
-        hvt: "Nguyễn Việt Việt",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề hiện đại của Kỹ thuật máy tính",
-        nhom: "CL",
-    },
-    {
-        msv: "21020275",
-        hvt: "Nguyễn Việt Anh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề hiện đại của Kỹ thuật máy tính",
-        nhom: "CL",
-    },
-    {
-        msv: "21020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "21020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "21020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "21020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-    {
-        msv: "22020277",
-        hvt: "Nguyễn Việt Ánh",
-        mmh: "INT3507 50",
-        tmh: "Các vấn đề abcxycdu",
-        nhom: "CL",
-    },
-]
-export default function SearchScreen({navigation}) {
+
+export default function SearchScreen({ navigation }) {
     const [selectedhocky, setSelectedhocky] = useState() //lay value
     const [selectedColumn, setSelectedColumn] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
-
-    const totalPages = Math.ceil(data.length / selectedColumn)
+    const [semesters, setSemesters] = useState([])
+    const [data, setData] = useState([])
+    useEffect(() => {
+        const fetchSemester = async () => {
+            try {
+                const response = await fetch(
+                    `http://192.168.0.102:3000/semesterList`
+                )
+                if (response.status !== 200) {
+                    Alert.alert("Error", data.message)
+                }
+                const jsonData = await response.json()
+                setSemesters(jsonData.List)
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error)
+            }
+        }
+        fetchSemester()
+    }, [])
+    useEffect(() => {
+        if (!selectedhocky || selectedhocky === "none") return
+        const fetchData = async () => {
+            try {
+                const response = await fetch(
+                    `http://192.168.0.102:3000/getData?semester_id=${selectedhocky}`
+                )
+                
+                const jsonData = await response.json()
+                if (response.status !== 200) {
+                    console.log(jsonData.message)
+                }
+                setData(jsonData.Data)
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error)
+            }
+        }
+        fetchData()
+    }, [selectedhocky])
+    const totalPages = Math.ceil(data?.length / selectedColumn)
     // Tổng số trang
 
     const handlePrev = () => {
@@ -239,14 +108,13 @@ export default function SearchScreen({navigation}) {
                             }
                         >
                             <Picker.Item label="Lựa chọn học kỳ" value="none" />
-                            <Picker.Item
-                                label="Học kỳ 1 năm 2024-2025"
-                                value="hk12024-2025"
-                            />
-                            <Picker.Item
-                                label="Học kỳ 2 năm 2024-2025"
-                                value="hk22024-2025"
-                            />
+                            {semesters.map((semester) => (
+                                <Picker.Item
+                                    id={semester.semester_id}
+                                    value={semester.semester_id} // Đảm bảo mỗi item có một key duy nhất
+                                    label={semester.semester_name} // Hiển thị tên kỳ học
+                                />
+                            ))}
                         </Picker>
                     </View>
                 </View>
@@ -262,8 +130,8 @@ export default function SearchScreen({navigation}) {
                     <View
                         style={{
                             borderWidth: 1,
-                            borderColor: "#ccc", 
-                            borderRadius: 5, 
+                            borderColor: "#ccc",
+                            borderRadius: 5,
                             overflow: "hidden", // Đảm bảo các góc bo tròn hiển thị chính xác
                             width: 100,
                             height: 50,
@@ -349,21 +217,25 @@ export default function SearchScreen({navigation}) {
                     </View>
                 </View>
             </View>
-            <View style={{ flex: 1 }}>
-                <DataComponent
-                    data={data}
-                    currentPage={currentPage}
-                    selectedColumn={selectedColumn}
-                />
-            </View>
+            {data ? (
+                <View style={{ flex: 1 }}>
+                    <DataComponent
+                        data={data}
+                        currentPage={currentPage}
+                        selectedColumn={selectedColumn}
+                    />
+                </View>
+            ) : (
+                <Text>Không có dữ liệu kỳ này</Text>
+            )}
         </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     picker: {
-        height: 50, 
-        width: 100, 
+        height: 50,
+        width: 100,
     },
     container: {
         flexDirection: "row",

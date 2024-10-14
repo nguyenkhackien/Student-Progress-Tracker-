@@ -18,13 +18,11 @@ const AccountScreeen = ({ navigation }) => {
     const Account = useSelector((data) => data.auth.Account)
     const [info, setInfo] = useState(null)
     const dispatch = useDispatch()
-    const isLogin = useSelector( ( data ) => data.auth.Account )
-    console.log(isLogin);
     useEffect(() => {
         const getinfo = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.109:3000/getInfo?account=${Account}`,
+                    `http://192.168.0.102:3000/getInfo?account=${Account}`,
                     {
                         method: "GET",
                         headers: {

@@ -21,7 +21,7 @@ const EditInfo = ({ navigation, route }) => {
         else {
             try {
                 const response = await fetch(
-                    "http://192.168.0.109:3000/changePassword",
+                    "http://192.168.0.102:3000/changePassword",
                     {
                         method: "PUT",
                         headers: {

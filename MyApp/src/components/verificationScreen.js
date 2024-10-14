@@ -37,7 +37,7 @@ const VerificationScreen = ({ navigation, route }) => {
                 onFilled={async (otp) => {
                     try {
                         const response = await fetch(
-                            "http://192.168.0.109:3000/verify",
+                            "http://192.168.0.102:3000/verify",
                             {
                                 method: "POST",
                                 headers: {

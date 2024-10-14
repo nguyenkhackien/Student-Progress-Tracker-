@@ -17,6 +17,7 @@ import ForgotPassWordScreen from "./src/components/ForgotPasswordScreen"
 import VerificationScreen from "./src/components/VerificationScreen"
 import ChangePasswordScreen from "./src/components/ChangePasswordScreen"
 import EditInfo from "./src/components/EditInfo"
+import StudyProgressScreen from "./src/components/StudyProgress"
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
@@ -50,6 +51,17 @@ const HomeTab = () => {
                                 size={28}
                                 color={color}
                             />
+                        )
+                    },
+                }}
+            />
+            <Tab.Screen
+                name="StudyProgress"
+                component={LoginScreen}
+                options={{
+                    tabBarIcon: ({ color }) => {
+                        return (
+                            <Ionicons name={"search"} size={28} color={color} />
                         )
                     },
                 }}
@@ -93,6 +105,17 @@ const HomeTab2 = () => {
                                 size={28}
                                 color={color}
                             />
+                        )
+                    },
+                }}
+            />
+            <Tab.Screen
+                name="StudyProgress"
+                component={StudyProgressScreen}
+                options={{
+                    tabBarIcon: ({ color }) => {
+                        return (
+                            <Ionicons name={"search"} size={28} color={color} />
                         )
                     },
                 }}
