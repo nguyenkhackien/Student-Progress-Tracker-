@@ -1,7 +1,7 @@
 import CheckBox from "@react-native-community/checkbox"
 import { useState } from "react"
-import { StyleSheet, Text, View ,TouchableOpacity} from "react-native"
-import AntDesign from "react-native-vector-icons/AntDesign" 
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
+import AntDesign from "react-native-vector-icons/AntDesign"
 
 const RenderData = (prop) => {
     const { item } = prop
@@ -16,16 +16,19 @@ const RenderData = (prop) => {
             }}
         >
             <View style={styles.containerSTT}>
-                <Text style={{ textAlign: "center" }}>{item.STT}</Text>
+                <Text style={{ textAlign: "center" }}></Text>
             </View>
             <View style={styles.containerMs}>
-                <Text style={{ textAlign: "center" }}>{item.Maso}</Text>
+                <Text style={{ textAlign: "center" }}>{item.subject_id}</Text>
             </View>
             <View style={styles.containerHp}>
-                <Text style={{ textAlign: "center" }}>{item.HocPhan}</Text>
+                <Text style={{ textAlign: "center" }}>{item.subject_name}</Text>
             </View>
             <View style={styles.containerTc}>
                 <Text style={{ textAlign: "center" }}>{item.TC}</Text>
+            </View>
+            <View style={styles.containerMs}>
+                <Text style={{ textAlign: "center" }}>{item.prerequisite}</Text>
             </View>
             <View style={styles.containerDk}>
                 {/* <CheckBox
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "center",
         borderColor: "#888",
-        width: "50%",
+        width: "30%",
     },
     containerTc: {
         borderRightWidth: 1,
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         fontSize: 17,
         color: "black",
-        textAlign: "center", // Căn giữa chữ
+        textAlign: "center", 
     },
 })
 

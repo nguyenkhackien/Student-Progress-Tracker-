@@ -10,47 +10,64 @@ import {
 import RenderData from "./RenderData"
 import AntDesign from "@expo/vector-icons/AntDesign"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 
 const StudyProgressScreen = ({ navigation }) => {
-    const data = [
-        {
-            STT: 1,
-            Maso: "PHI1006",
-            HocPhan: "Triết học mác Lênin",
-            TC: 3,
-            DK: true,
-        },
-        {
-            STT: 2,
-            Maso: "PHI1006",
-            HocPhan: "Triết học mác Lênin",
-            TC: 2,
-            DK: false,
-        },
-        {
-            STT: 3,
-            Maso: "PHI1006",
-            HocPhan: "Triết học mác Lênin",
-            TC: 3,
-            DK: false,
-        },
-        {
-            STT: 4,
-            Maso: "PHI1006",
-            HocPhan: "Triết học mác Lênin",
-            TC: 3,
-            DK: true,
-        },
-        {
-            STT: 5,
-            Maso: "PHI1006",
-            HocPhan: "Triết học mác Lênin",
-            TC: 3,
-            DK: false,
-        },
-    ]
+    const [data, setData] = useState([])
+    const [require, setRequire] = useState([])
+    const Account = useSelector((data) => data.auth.Account)
+    const [page, setPage] = useState(true)
+    useEffect(() => {
+        const fetchMajor = async () => {
+            try {
+                const response = await fetch(
+                    `http://192.168.0.103:3000/getMajor_id?account=${Account}`
+                )
+                if (response.status !== 200) {
+                    Alert.alert("Error", response.message)
+                }
+                const jsonData1 = await response.json()
+                const major_id = jsonData1.Data[0].major_id
+
+                await fetchCurriculum(major_id)
+                await fetchRequire(major_id)
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error)
+            }
+        }
+        fetchMajor()
+        const fetchCurriculum = async (major_id) => {
+            try {
+                const response = await fetch(
+                    `http://192.168.0.103:3000/getCurriculum?major_id=${major_id}`
+                )
+                if (response.status !== 200) {
+                    Alert.alert("Error", response.message)
+                }
+                const jsonData1 = await response.json()
+                setData(jsonData1.Data)
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error)
+            }
+        }
+        const fetchRequire = async (major_id) => {
+            try {
+                const response = await fetch(
+                    `http://192.168.0.103:3000/getRequired?major_id=${major_id}`
+                )
+                if (response.status !== 200) {
+                    Alert.alert("Error", response.message)
+                }
+                const jsonData1 = await response.json()
+                setRequire(jsonData1.Data)
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error)
+            }
+        }
+    }, [])
     return (
-        <ScrollView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <View
                 style={{
                     width: "100%",
@@ -69,7 +86,6 @@ const StudyProgressScreen = ({ navigation }) => {
                     Tra cứu UET
                 </Text>
 
-
                 <TouchableOpacity>
                     <MaterialIcons
                         name="notifications-on"
@@ -79,102 +95,755 @@ const StudyProgressScreen = ({ navigation }) => {
                     />
                 </TouchableOpacity>
             </View>
-            <View style={styles.container}>
-                {/* <TouchableOpacity
-                    onPress={() => {
-                        navigation.goBack()
-                    }}
-                >
-                    <Image source={require("../../assets/logo.png")} />
-                </TouchableOpacity> */}
-                <Text style={[styles.text, { paddingRight: 24 }]}>
-                    Học Phần
-                </Text>
-            </View>
-            {/* header */}
             <View
                 style={{
+                    height: "20%",
                     width: "100%",
-                    flexDirection: "row",
-                    backgroundColor: "#6fc2e3",
-                    height: 50,
-                    alignItems: "center",
+                    backgroundColor: "red",
+                    marginBottom: 10,
                 }}
-            >
-                <View style={styles.containerSTT}>
-                    <Text style={styles.textHeader}>STT</Text>
-                </View>
-                <View style={styles.containerMs}>
-                    <Text style={styles.textHeader}>Mã số</Text>
-                </View>
-                <View style={styles.containerHp}>
-                    <Text style={styles.textHeader}>Học phần</Text>
-                </View>
-                <View style={styles.containerTc}>
-                    <Text style={styles.textHeader}>Số tín chỉ</Text>
-                </View>
-                <View style={styles.containerDk}>
-                    <Text style={styles.textHeader}>Điều kiện</Text>
-                </View>
-            </View>
-            {/* khoi kien thuc chung */}
-            <View style={{ width: "100%" }}>
-                {/* header khoi kien thuc chung */}
-                <View
-                    style={{
-                        width: "100%",
-                        flexDirection: "row",
-                        height: 50,
-                        borderBottomWidth: 1,
-                    }}
-                >
-                    <View style={styles.containerSTT}>
-                        <Text style={{ textAlign: "center" }}>I</Text>
-                    </View>
-                    <View style={[styles.containerSTT, { width: "65%" }]}>
-                        <Text style={{ marginLeft: 6, textAlign: "center" }}>
-                            Khối kiến thức chung(Chưa tính học phần GDTC,
-                            GDQP-AN)
-                        </Text>
-                    </View>
-                    <View style={styles.containerTc}>
-                        <Text style={{ textAlign: "center" }}>16</Text>
-                    </View>
-                </View>
-                {/* renderData */}
-                {data.map((item, index) => (
-                    <RenderData key={index} item={item} />
-                ))}
-            </View>
+            ></View>
 
-            <View style={{ width: "100%" }}>
-                {/* header khoi kien thuc chung */}
+            <ScrollView style={{ flex: 1 }}>
                 <View
                     style={{
-                        width: "100%",
                         flexDirection: "row",
-                        height: 50,
-                        borderBottomWidth: 1,
+                        marginBottom: 10,
+                        flex: 1,
+                        borderBottomWidth: 2,
                     }}
                 >
-                    <View style={styles.containerSTT}>
-                        <Text style={{ textAlign: "center" }}>II</Text>
-                    </View>
-                    <View style={[styles.containerSTT, { width: "65%" }]}>
-                        <Text style={{ marginLeft: 6, textAlign: "center" }}>
-                            Khối kiến thức không chung
+                    <TouchableOpacity
+                        style={{
+                            width: "40%",
+                            height: 30,
+                            borderWidth: 1,
+                            borderColor: "black",
+                            marginRight: 5,
+                        }}
+                        onPress={() => {
+                            setPage(true)
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                flex: 1,
+                                lineHeight: 30,
+                                color: page ? "blue" : "black",
+                            }}
+                        >
+                            Khung chương trình
                         </Text>
-                    </View>
-                    <View style={styles.containerTc}>
-                        <Text style={{ textAlign: "center" }}>16</Text>
-                    </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{
+                            width: "40%",
+                            height: 30,
+                            borderWidth: 1,
+                            borderColor: "black",
+                        }}
+                        onPress={() => {
+                            setPage(false)
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                flex: 1,
+                                lineHeight: 30,
+                                color: page ? "black" : "blue",
+                            }}
+                        >
+                            Kết quả học tập
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-                {/* renderData */}
-                {data.map((item, index) => (
-                    <RenderData key={index} item={item} />
-                ))}
-            </View>
-        </ScrollView>
+                {page ? (
+                    <>
+                        {/* header */}
+                        <View
+                            style={{
+                                width: "100%",
+                                flexDirection: "row",
+                                backgroundColor: "#6fc2e3",
+                                height: 50,
+                                alignItems: "center",
+                            }}
+                        >
+                            <View style={styles.containerSTT}>
+                                <Text style={styles.textHeader}>STT</Text>
+                            </View>
+                            <View style={styles.containerMs}>
+                                <Text style={styles.textHeader}>Mã số</Text>
+                            </View>
+                            <View style={styles.containerHp}>
+                                <Text style={styles.textHeader}>Học phần</Text>
+                            </View>
+                            <View style={styles.containerTc}>
+                                <Text style={styles.textHeader}>
+                                    Số tín chỉ
+                                </Text>
+                            </View>
+                            <View style={styles.containerMs}>
+                                <Text style={styles.textHeader}>
+                                    Môn tiên quyết
+                                </Text>
+                            </View>
+                            <View style={styles.containerDk}>
+                                <Text style={styles.textHeader}>Trạng thái</Text>
+                            </View>
+                        </View>
+                        {/* nhóm 1 */}
+                        <View style={{ width: "100%" }}>
+                            {/* header khoi kien thuc chung */}
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        I
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Khối kiến thức chung(Chưa tính học phần
+                                        GDTC, GDQP-AN)
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) => item.group_id === "1"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "1")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                        {/* nhóm 2 */}
+                        <View style={{ width: "100%" }}>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        II
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Khối kiến thức không chung
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) => item.group_id === "2"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "2")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                        {/* nhóm 3 */}
+                        <View style={{ width: "100%" }}>
+                            {/* header khoi kien thuc chung */}
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        III
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Khối kiến thức theo khối ngành
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) => item.group_id === "3"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "3")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                        {/* nhóm 4.1 */}
+                        <View style={{ width: "100%" }}>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        IV
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Khối kiến theo nhóm ngành
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {require.filter(
+                                            (item) => item.group_id === "4.1"
+                                        )[0]?.required +
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "4.2"
+                                            )[0]?.required}
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        IV.1
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Các học phần bắt buộc
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "4.1"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "4.1")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                        {/* nhóm 4.2 */}
+                        <View style={{ width: "100%" }}>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        IV.2
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Các học phần tự chọn
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "4.2"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "4.2")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                        {/* nhóm 5.1 */}
+                        <View style={{ width: "100%" }}>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        V
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Khối kiến thức ngành
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {require.filter(
+                                            (item) => item.group_id === "5.1"
+                                        )[0]?.required +
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "5.2"
+                                            )[0]?.required +
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "5.3"
+                                            )[0]?.required +
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "5.4"
+                                            )[0]?.required}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        V.1
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Các học phần bắt buộc
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "5.1"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "5.1")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                        {/* nhóm 5.2 */}
+                        <View style={{ width: "100%" }}>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        V.2
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Các học phần tự chọn
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "5.2"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "5.2")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                        {/* nhóm 5.3 */}
+                        <View style={{ width: "100%" }}>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        V.3
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Các học phần bổ trợ
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "5.3"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "5.3")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                        {/* nhóm 5.4 */}
+                        <View style={{ width: "100%" }}>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    height: 50,
+                                    borderBottomWidth: 1,
+                                }}
+                            >
+                                <View style={styles.containerSTT}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        V.4
+                                    </Text>
+                                </View>
+                                <View
+                                    style={[
+                                        styles.containerSTT,
+                                        { width: "60%" },
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            marginLeft: 6,
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        Thực tập và tốt nghiệp
+                                    </Text>
+                                </View>
+                                <View style={styles.containerTc}>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            color: "blue",
+                                        }}
+                                    >
+                                        {
+                                            require.filter(
+                                                (item) =>
+                                                    item.group_id === "5.4"
+                                            )[0]?.required
+                                        }
+                                    </Text>
+                                </View>
+                            </View>
+                            {/* renderData */}
+                            {data
+                                .filter((item) => item.group_id === "5.4")
+                                .map((item, index) => (
+                                    <RenderData key={index} item={item} />
+                                ))}
+                        </View>
+                    </>
+                ) : (
+                    <View>
+                        <Text>Page 2</Text>
+                    </View>
+                )}
+            </ScrollView>
+        </View>
     )
 }
 
@@ -198,7 +867,7 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "center",
         borderColor: "#888",
-        width: "50%",
+        width: "30%",
     },
     containerTc: {
         borderRightWidth: 1,

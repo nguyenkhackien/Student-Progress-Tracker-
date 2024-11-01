@@ -10,12 +10,13 @@ const insertData2Subjects = `INSERT INTO Subjects (subject_id, subject_name, TC)
             VALUES ?`
 const insertData2Groupsubject = `INSERT INTO GroupSubject (group_id, group_name, note)
             VALUES ?`
-const insertData2Curriculum = `INSERT INTO Curriculum (subject_id, group_id, major_id)
+const insertData2Curriculum = `INSERT INTO Curriculum (subject_id, group_id, major_id,prerequisite)
             VALUES ?`
 const insertData2Students = `INSERT INTO Students (MSSV, student_name, birth_date , major_id, class)
             VALUES ?`
-
 const insertData2StudyProgress = `INSERT INTO StudyProgress (MSSV, subject_id, points)
+            VALUES ?`
+const insertData2GroupSubjectRequirements = `INSERT INTO GroupSubjectRequirements (major_id, group_id, required)
             VALUES ?`
 module.exports = {
     insertData2Registration,
@@ -27,4 +28,5 @@ module.exports = {
     insertData2Curriculum,
     insertData2Students,
     insertData2StudyProgress,
+    insertData2GroupSubjectRequirements,
 }
