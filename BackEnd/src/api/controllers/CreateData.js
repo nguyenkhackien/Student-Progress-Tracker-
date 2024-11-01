@@ -52,6 +52,17 @@ function insertData(data, String, req, res) {
             ).toLocaleDateString("en-GB") // convert serial number to Date time
         }
     })
+    data.forEach((row) => {
+        if (
+            row["Ngày thi"] &&
+            !isNaN(row["Ngày thi"]) &&
+            row["Ngày thi"] > 25569
+        ) {
+            row["Ngày thi"] = serialToDate(row["Ngày thi"]).toLocaleDateString(
+                "en-GB"
+            ) // convert serial number to Date time
+        }
+    })
     connection.query(
         String,
         [data.map((item) => Object.values(item) || NULL)],
@@ -106,7 +117,8 @@ const createData = (req, res) => {
     )
     // randomSubjectData(students, curriculums, req, res)
     // insertData(lichhoc, insertData2LichHoc, req, res)
-    // insertData(lichthi, insertData2LichThi, req, res)
+    // insertData( lichthi, insertData2LichThi, req, res )
+    // insertData(registration,insertData2Registration,req,res)
     // insertData(subjects, insertData2Subjects, req, res)
     // insertData(groupSubjects, insertData2Groupsubject, req, res)
     // insertData(curriculums, insertData2Curriculum, req, res)

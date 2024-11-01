@@ -22,7 +22,7 @@ const ForgotPassWordScreen = ( { navigation }) => {
             return
         }
         try {
-            const response = await fetch("http://192.168.0.102:3000/sendOTP", {
+            const response = await fetch("http://192.168.0.103:3000/sendOTP", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

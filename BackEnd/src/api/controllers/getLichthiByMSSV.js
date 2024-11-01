@@ -1,19 +1,20 @@
 const connection = require("../../config/database")
 
-const getData = async (req, res) => {
+const getLichthiByMSSV = async (req, res) => {
+    const Account = req.query.account
     const semester_id = req.query.semester_id
-    const searchType = req.query.searchType
     try {
-        const [ Data ] = await connection
-            .promise()
-            .query(
-                `SELECT MSSV,hoTen,maLMH,tenMh,nhom,semester_id FROM Registration WHERE semester_id=?`,
-                [semester_id]
-            )
+        const [Data] = await connection.promise().query(
+            `SELECT lt.tenMh,lt.maLMH,lt.TC,lt.SS,lt.HTT,lt.Giothi,lt.thu,lt.ngaythi,lt.phongthi,lt.semester_id
+            FROM Registration s
+            JOIN LichThi lt ON s.maLMH = lt.maLMH
+            WHERE s.mssv = ? and lt.semester_id=? `,
+            [Account, semester_id]
+        )
         if (Data.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Hiện không có dữ liệu kỳ này",
+                message: "Hiện không có dữ ",
             })
         }
         res.status(200).json({
@@ -30,4 +31,4 @@ const getData = async (req, res) => {
     }
 }
 
-module.exports = { getData }
+module.exports = { getLichthiByMSSV }

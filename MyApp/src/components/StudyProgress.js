@@ -8,6 +8,8 @@ import {
     Image,
 } from "react-native"
 import RenderData from "./RenderData"
+import AntDesign from "@expo/vector-icons/AntDesign"
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 
 const StudyProgressScreen = ({ navigation }) => {
     const data = [
@@ -49,6 +51,34 @@ const StudyProgressScreen = ({ navigation }) => {
     ]
     return (
         <ScrollView style={{ flex: 1 }}>
+            <View
+                style={{
+                    width: "100%",
+                    backgroundColor: "white",
+                    flexDirection: "row",
+                }}
+            >
+                <Text
+                    style={{
+                        margin: "auto",
+                        fontWeight: "bold",
+                        fontSize: 23,
+                        color: "#004580",
+                    }}
+                >
+                    Tra cứu UET
+                </Text>
+
+
+                <TouchableOpacity>
+                    <MaterialIcons
+                        name="notifications-on"
+                        size={28}
+                        color="black"
+                        style={{ position: "absolute", right: 10 }}
+                    />
+                </TouchableOpacity>
+            </View>
             <View style={styles.container}>
                 {/* <TouchableOpacity
                     onPress={() => {

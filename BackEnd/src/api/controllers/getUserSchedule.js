@@ -8,8 +8,8 @@ const getUserSchedule = async (req, res) => {
             `SELECT lh.maLMH,lh.tenMH,lh.Giangvien,lh.thu,lh.tiet,lh.giangduong,lh.nhom,lh.semester_id
             FROM Registration s
             JOIN lichhoc lh ON s.maLMH = lh.maLMH
-            WHERE s.mssv = ? and lh.semester_id=?`,
-            [Account,semester_id]
+            WHERE s.mssv = ? and lh.semester_id=? and (s.nhom = lh.nhom OR lh.nhom = 'CL')`,
+            [Account, semester_id]
         )
         if (Data.length === 0) {
             return res.status(404).json({

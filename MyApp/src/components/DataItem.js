@@ -9,13 +9,13 @@ import {
 import { useState, useEffect } from "react"
 
 const DataItem = (props) => {
-    const { data } = props
+    const { data, searchType } = props
     const [modalVisible, setModalVisible] = useState(false) // State để quản lý modal
     const [detailData, setDetailData] = useState([])
     const handlePress = async () => {
         try {
             const response = await fetch(
-                `http://192.168.0.102:3000/getDetailData?maLMH=${data.maLMH}&semester_id=${data.semester_id}&nhom=${data.nhom}`
+                `http://192.168.0.103:3000/getDetailData?maLMH=${data.maLMH}&semester_id=${data.semester_id}&nhom=${data.nhom}&searchType=${searchType}`
             )
 
             if (response.status !== 200) {
@@ -41,31 +41,60 @@ const DataItem = (props) => {
                 visible={modalVisible}
                 onRequestClose={closeModal} // Đóng modal khi nhấn nút back trên Android
             >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalText}>
-                            Mã lớp môn học: {detailData[0]?.maLMH}
-                        </Text>
-                        <Text style={styles.modalText}>
-                            Tên môn học: {detailData[0]?.tenMH}
-                        </Text>
-                        <Text style={styles.modalText}>Lịch học:</Text>
-                        {detailData.map((item) => (
-                            <View>
-                                <Text style={styles.modalText}>
-                                    -Thứ {item?.thu}({item?.tiet}):{item?.giangduong}{"\n"}
-                                    Nhóm:{item?.nhom}
-                                </Text>
-                                <Text style={styles.modalText}>
-                                    Giảng Viên: {item?.Giangvien}
-                                </Text>
-                            </View>
-                        ))}
+                {searchType === "Lịch học" ? (
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalText}>
+                                Mã lớp môn học: {detailData[0]?.maLMH}
+                            </Text>
+                            <Text style={styles.modalText}>
+                                Tên môn học: {detailData[0]?.tenMH}
+                            </Text>
+                            <Text style={styles.modalText}>Lịch học:</Text>
+                            {detailData.map((item, index) => (
+                                <View key={index}>
+                                    <Text style={styles.modalText}>
+                                        -Thứ {item?.thu}({item?.tiet}):
+                                        {item?.giangduong}
+                                        {"\n"}
+                                        Nhóm:{item?.nhom}
+                                    </Text>
+                                    <Text style={styles.modalText}>
+                                        Giảng Viên: {item?.Giangvien}
+                                    </Text>
+                                </View>
+                            ))}
 
-                        {/* Nút đóng modal */}
-                        <Button title="Đóng" onPress={closeModal} />
+                            {/* Nút đóng modal */}
+                            <Button title="Đóng" onPress={closeModal} />
+                        </View>
                     </View>
-                </View>
+                ) : (
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalText}>
+                                Mã lớp môn học: {detailData[0]?.maLMH}
+                            </Text>
+                            <Text style={styles.modalText}>
+                                Tên môn học: {detailData[0]?.tenMH}
+                            </Text>
+                            <Text style={styles.modalText}>
+                                Ngày thi:{detailData[0]?.ngaythi ?? "BTL"}
+                            </Text>
+                            <Text style={styles.modalText}>
+                                Giờ thi:{detailData[0]?.Giothi ?? "BTL"}
+                            </Text>
+                            <Text style={styles.modalText}>
+                                Phòng thi:{detailData[0]?.phongthi ?? "BTL"}
+                            </Text>
+                            <Text style={styles.modalText}>
+                                Hình thức thi:{detailData[0]?.HTT ?? "BTL"}
+                            </Text>
+                            {/* Nút đóng modal */}
+                            <Button title="Đóng" onPress={closeModal} />
+                        </View>
+                    </View>
+                )}
             </Modal>
             <TouchableOpacity style={styles.container} onPress={handlePress}>
                 <View

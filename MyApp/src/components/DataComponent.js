@@ -4,7 +4,7 @@ import DataItem from "./DataItem"
 import Feather from "@expo/vector-icons/Feather"
 import { useState } from "react"
 const DataComponent = (props) => {
-    const { data, currentPage, selectedColumn } = props
+    const { data, currentPage, selectedColumn, searchType } = props
     const [searchMsv, setSearchMsv] = useState("")
     const startIndex = (currentPage - 1) * selectedColumn
     const endIndex = startIndex + selectedColumn
@@ -84,7 +84,7 @@ const DataComponent = (props) => {
                 </View>
             </View>
             {displayedData.map((item, index) => (
-                <DataItem key={index} data={item} />
+                <DataItem key={index} data={item} searchType={ searchType} />
             ))}
         </View>
     )

@@ -12,6 +12,7 @@ const { getSemesterList } = require( "../controllers/GetSemesterList" )
 const { getData } = require( "../controllers/getData" )
 const { getDetailData } = require( "../controllers/getDetailData" )
 const { getUserSchedule } = require( "../controllers/getUserSchedule" )
+const { getLichthiByMSSV } = require( "../controllers/getLichthiByMSSV" )
 
 router.get("/", (req, res) => res.send("hello khac kien !"))
 router.get("/createData", createData)
@@ -26,5 +27,6 @@ router.get( "/getInfo", getInfoUser )
 router.get( "/getData", getData )
 router.get( "/getDetailData", getDetailData )
 router.get("/getUserSchedule",getUserSchedule)
+router.get( "/getLichthiByMSSV", getLichthiByMSSV )
 
 module.exports = router

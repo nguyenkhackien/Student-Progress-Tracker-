@@ -21,13 +21,14 @@ export default function SearchScreen({ navigation }) {
     const [selectedhocky, setSelectedhocky] = useState() //lay value
     const [selectedColumn, setSelectedColumn] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
-    const [semesters, setSemesters] = useState([])
+    const [ semesters, setSemesters ] = useState( [] )
+    const [ searchType, setSearchType ] = useState( "Lịch học" )
     const [data, setData] = useState([])
     useEffect(() => {
         const fetchSemester = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.102:3000/semesterList`
+                    `http://192.168.0.103:3000/semesterList`
                 )
                 if (response.status !== 200) {
                     Alert.alert("Error", data.message)
@@ -41,11 +42,11 @@ export default function SearchScreen({ navigation }) {
         fetchSemester()
     }, [])
     useEffect(() => {
-        if (!selectedhocky || selectedhocky === "none") return
+        if ( !selectedhocky || selectedhocky === "none" ) return
         const fetchData = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.102:3000/getData?semester_id=${selectedhocky}`
+                    `http://192.168.0.103:3000/getData?semester_id=${selectedhocky}`
                 )
                 
                 const jsonData = await response.json()
@@ -100,7 +101,14 @@ export default function SearchScreen({ navigation }) {
                     >
                         Học kỳ:
                     </Text>
-                    <View style={{ flex: 1, borderWidth: 1, borderRadius: 10 }}>
+                    <View
+                        style={{
+                            width: 300,
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            marginVertical: 6,
+                        }}
+                    >
                         <Picker
                             selectedValue={selectedhocky}
                             onValueChange={(itemValue, itemIndex) =>
@@ -108,13 +116,46 @@ export default function SearchScreen({ navigation }) {
                             }
                         >
                             <Picker.Item label="Lựa chọn học kỳ" value="none" />
-                            {semesters.map((semester) => (
+                            {semesters.map((semester, index) => (
                                 <Picker.Item
+                                    key={semester.id}
                                     id={semester.semester_id}
                                     value={semester.semester_id} // Đảm bảo mỗi item có một key duy nhất
                                     label={semester.semester_name} // Hiển thị tên kỳ học
                                 />
                             ))}
+                        </Picker>
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <Text
+                        style={{ fontSize: 18, color: "black", marginRight: 8 }}
+                    >
+                        Tra Cứu:
+                    </Text>
+                    <View
+                        style={{
+                            width: 300,
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            marginVertical: 6,
+                        }}
+                    >
+                        <Picker
+                            selectedValue={searchType}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setSearchType(itemValue)
+                            }
+                        >
+                            <Picker.Item label="Lịch học" value="Lịch học" />
+                            <Picker.Item label="Lịch thi" value="Lịch thi" />
                         </Picker>
                     </View>
                 </View>
@@ -217,16 +258,84 @@ export default function SearchScreen({ navigation }) {
                     </View>
                 </View>
             </View>
+
             {data ? (
                 <View style={{ flex: 1 }}>
                     <DataComponent
                         data={data}
                         currentPage={currentPage}
                         selectedColumn={selectedColumn}
+                        searchType={searchType}
                     />
                 </View>
             ) : (
-                <Text>Không có dữ liệu kỳ này</Text>
+                <>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            flex: 1,
+                            borderWidth: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: 10,
+                            padding: 6,
+                            margin: 10,
+                        }}
+                    >
+                        <TextInput
+                            style={{ flex: 1, marginLeft: 10, height: 40 }}
+                            placeholder="Tìm kiếm theo MSV..."
+                            placeholderTextColor="gray"
+                        />
+                        <Feather name="search" size={24} color="black" />
+                    </View>
+                    <View style={styles.dataContainer}>
+                        <View
+                            style={[
+                                styles.column,
+                                { width: "20%", borderRightWidth: 1 },
+                            ]}
+                        >
+                            <Text>MSV</Text>
+                        </View>
+                        <View
+                            style={[
+                                styles.column,
+                                { width: "25%", borderRightWidth: 1 },
+                            ]}
+                        >
+                            <Text>Họ Và Tên</Text>
+                        </View>
+                        <View
+                            style={[
+                                styles.column,
+                                { width: "20%", borderRightWidth: 1 },
+                            ]}
+                        >
+                            <Text>MMH</Text>
+                        </View>
+                        <View
+                            style={[
+                                styles.column,
+                                { width: "25%", borderRightWidth: 1 },
+                            ]}
+                        >
+                            <Text>Tên MH</Text>
+                        </View>
+                        <View
+                            style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "10%",
+                            }}
+                        >
+                            <Text>Nhóm</Text>
+                        </View>
+                    </View>
+                    <Text style={{ fontSize: 18, marginHorizontal: "auto" }}>
+                        Không có dữ liệu kỳ này
+                    </Text>
+                </>
             )}
         </ScrollView>
     )
@@ -259,5 +368,17 @@ const styles = StyleSheet.create({
     },
     activeText: {
         color: "white",
+    },
+    dataContainer: {
+        flexDirection: "row",
+        borderWidth: 1,
+        backgroundColor: "#afdede",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    column: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: 28,
     },
 })

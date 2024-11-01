@@ -22,7 +22,7 @@ const AccountScreeen = ({ navigation }) => {
         const getinfo = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.102:3000/getInfo?account=${Account}`,
+                    `http://192.168.0.103:3000/getInfo?account=${Account}`,
                     {
                         method: "GET",
                         headers: {
