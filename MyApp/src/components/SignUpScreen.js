@@ -40,7 +40,7 @@ const SignUpScreen = ({ navigation }) => {
         setLoading(true)
         try {
             console.log("test")
-            const response = await fetch("http://192.168.0.103:3000/register", {
+            const response = await fetch("http://10.0.2.2:3000/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

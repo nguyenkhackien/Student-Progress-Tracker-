@@ -21,14 +21,14 @@ export default function SearchScreen({ navigation }) {
     const [selectedhocky, setSelectedhocky] = useState() //lay value
     const [selectedColumn, setSelectedColumn] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
-    const [ semesters, setSemesters ] = useState( [] )
-    const [ searchType, setSearchType ] = useState( "Lịch học" )
+    const [semesters, setSemesters] = useState([])
+    const [searchType, setSearchType] = useState("Lịch học")
     const [data, setData] = useState([])
     useEffect(() => {
         const fetchSemester = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/semesterList`
+                    `http://10.0.2.2:3000/semesterList`
                 )
                 if (response.status !== 200) {
                     Alert.alert("Error", data.message)
@@ -42,13 +42,13 @@ export default function SearchScreen({ navigation }) {
         fetchSemester()
     }, [])
     useEffect(() => {
-        if ( !selectedhocky || selectedhocky === "none" ) return
+        if (!selectedhocky || selectedhocky === "none") return
         const fetchData = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/getData?semester_id=${selectedhocky}`
+                    `http://10.0.2.2:3000/getData?semester_id=${selectedhocky}`
                 )
-                
+
                 const jsonData = await response.json()
                 if (response.status !== 200) {
                     console.log(jsonData.message)

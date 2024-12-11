@@ -11,7 +11,7 @@ import {
 import { OtpInput } from "react-native-otp-entry"
 import AntDesign from "@expo/vector-icons/AntDesign"
 const VerificationScreen = ({ navigation, route }) => {
-    const { email, token,Account } = route.params
+    const { email, token, Account } = route.params
     const [Token, setToken] = useState(token)
     return (
         <View
@@ -37,7 +37,7 @@ const VerificationScreen = ({ navigation, route }) => {
                 onFilled={async (otp) => {
                     try {
                         const response = await fetch(
-                            "http://192.168.0.103:3000/verify",
+                            "http://10.0.2.2:3000/verify",
                             {
                                 method: "POST",
                                 headers: {
@@ -53,7 +53,9 @@ const VerificationScreen = ({ navigation, route }) => {
                         console.log(data)
                         if (response.status === 200) {
                             Alert.alert("Success", "OTP verified!")
-                            navigation.navigate("ChangePasswordScreen",{Account:Account})
+                            navigation.navigate("ChangePasswordScreen", {
+                                Account: Account,
+                            })
                         } else {
                             Alert.alert("Error", data.message) // Thông báo OTP hết hạn hoặc sai
                         }

@@ -9,18 +9,17 @@ import {
     ImageBackground,
 } from "react-native"
 
-const ChangePasswordScreen = ({navigation,route}) => {
-    const {Account} = route.params
-    const [ newPassword, setNewPassword ] = useState( "" )
+const ChangePasswordScreen = ({ navigation, route }) => {
+    const { Account } = route.params
+    const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-    const handleChangePassword = async() =>
-    {
+    const handleChangePassword = async () => {
         if (newPassword !== confirmPassword)
             Alert.alert("failed", "mật khẩu không trùng khớp")
         else {
             try {
                 const response = await fetch(
-                    "http://192.168.0.103:3000/changePassword",
+                    "http://10.0.2.2:3000/changePassword",
                     {
                         method: "PUT",
                         headers: {
@@ -80,7 +79,7 @@ const ChangePasswordScreen = ({navigation,route}) => {
                         alignItems: "center",
                         borderRadius: 30,
                         marginBottom: 20,
-                        marginHorizontal:'auto'
+                        marginHorizontal: "auto",
                     }}
                     onPress={handleChangePassword}
                 >

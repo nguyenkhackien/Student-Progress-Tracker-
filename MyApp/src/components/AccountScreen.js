@@ -22,7 +22,7 @@ const AccountScreeen = ({ navigation }) => {
         const getinfo = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/getInfo?account=${Account}`,
+                    `http://10.0.2.2:3000/getInfo?account=${Account}`,
                     {
                         method: "GET",
                         headers: {
@@ -232,7 +232,7 @@ const AccountScreeen = ({ navigation }) => {
                     marginBottom: 20,
                 }}
                 onPress={() => {
-                    dispatch( logout() )
+                    dispatch(logout())
                     navigation.replace("HomeTab")
                 }}
             >

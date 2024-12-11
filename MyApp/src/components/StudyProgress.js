@@ -6,47 +6,71 @@ import {
     ScrollView,
     TouchableOpacity,
     Image,
+    Alert,
 } from "react-native"
 import RenderData from "./RenderData"
-import AntDesign from "@expo/vector-icons/AntDesign"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-
+import { AnimatedCircularProgress } from "react-native-circular-progress"
+import RenderItem from "./RenderItem"
+import CircularProgress from "./CircularProgress"
 const StudyProgressScreen = ({ navigation }) => {
     const [data, setData] = useState([])
     const [require, setRequire] = useState([])
     const Account = useSelector((data) => data.auth.Account)
     const [page, setPage] = useState(true)
+    const [studyProgress, setStudyProgress] = useState([])
+    const [creditsPassedByGroup, setCreditsPassedByGroup] = useState({})
+    const [info, setInfo] = useState([])
+    const [semesters, setSemesters] = useState([])
+
+    const maxSemesterId = Math.max(
+        ...studyProgress.map((item) => parseInt(item.semester_id))
+    )
+    const groupedData = studyProgress.reduce((acc, item) => {
+        const semesterId = item.semester_id
+        if (!acc[semesterId]) {
+            acc[semesterId] = []
+        }
+        acc[semesterId].push(item)
+        return acc
+    }, {})
     useEffect(() => {
         const fetchMajor = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/getMajor_id?account=${Account}`
+                    `http://10.0.2.2:3000/getMajor_id?account=${Account}`
                 )
                 if (response.status !== 200) {
                     Alert.alert("Error", response.message)
                 }
-                const jsonData1 = await response.json()
-                const major_id = jsonData1.Data[0].major_id
+                if (response.status === 200) {
+                    const jsonData1 = await response.json()
+                    const major_id = jsonData1.Data[0].major_id
 
-                await fetchCurriculum(major_id)
-                await fetchRequire(major_id)
+                    const curriculumData = await fetchCurriculum(major_id)
+                    await fetchRequire(major_id)
+                    await fetchStudyProgress(curriculumData)
+                    await fetchInfo()
+                }
             } catch (error) {
                 console.error("Lỗi khi lấy dữ liệu:", error)
             }
         }
-        fetchMajor()
+
         const fetchCurriculum = async (major_id) => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/getCurriculum?major_id=${major_id}`
+                    `http://10.0.2.2:3000/getCurriculum?major_id=${major_id}`
                 )
                 if (response.status !== 200) {
                     Alert.alert("Error", response.message)
                 }
-                const jsonData1 = await response.json()
-                setData(jsonData1.Data)
+                if (response.status === 200) {
+                    const jsonData1 = await response.json()
+                    return jsonData1.Data
+                }
             } catch (error) {
                 console.error("Lỗi khi lấy dữ liệu:", error)
             }
@@ -54,18 +78,123 @@ const StudyProgressScreen = ({ navigation }) => {
         const fetchRequire = async (major_id) => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/getRequired?major_id=${major_id}`
+                    `http://10.0.2.2:3000/getRequired?major_id=${major_id}`
+                )
+                if (response.status !== 200) {
+                    Alert.alert("Error", response.message)
+                }
+                if (response.status === 200) {
+                    const jsonData1 = await response.json()
+                    setRequire(jsonData1.Data)
+                }
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error)
+            }
+        }
+        const fetchInfo = async () => {
+            try {
+                const response = await fetch(
+                    `http://10.0.2.2:3000/getStudentInfo?account=${Account}`
+                )
+                if (response.status !== 200) {
+                    Alert.alert("Error", response.message)
+                }
+                if (response.status === 200) {
+                    const jsonData1 = await response.json()
+                    setInfo(jsonData1.info)
+                }
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error)
+            }
+        }
+        const fetchStudyProgress = async (curriculumData) => {
+            try {
+                const response = await fetch(
+                    `http://10.0.2.2:3000/getStudyProgress?account=${Account}`
+                )
+                if (response.status !== 200) {
+                    Alert.alert("Error", response.message)
+                }
+                if (response.status === 200) {
+                    const jsonData1 = await response.json()
+
+                    const creditsPassedByGroupT = {}
+                    const updateData = curriculumData.map((subject) => {
+                        // Kiểm tra môn học trong studyprogress
+                        const progress = jsonData1.Data.find(
+                            (sp) => sp.subject_id === subject.subject_id
+                        )
+                        // Nếu môn đã được học và đạt điểm qua
+                        if (progress && progress.points >= 4.0) {
+                            // Cập nhật tín chỉ đã qua của nhóm môn
+                            if (creditsPassedByGroupT[subject.group_id]) {
+                                creditsPassedByGroupT[subject.group_id] +=
+                                    subject.TC
+                            } else {
+                                creditsPassedByGroupT[subject.group_id] =
+                                    subject.TC
+                            }
+                            // Đánh dấu môn đã qua
+                            return { ...subject, passed: true }
+                        } else {
+                            // Đánh dấu môn chưa qua
+                            return { ...subject, passed: false }
+                        }
+                    })
+                    setData(updateData)
+                    setStudyProgress(jsonData1.Data)
+
+                    setCreditsPassedByGroup(creditsPassedByGroupT)
+                }
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error)
+            }
+        }
+        const fetchSemester = async () => {
+            try {
+                const response = await fetch(
+                    `http://10.0.2.2:3000/semesterList`
                 )
                 if (response.status !== 200) {
                     Alert.alert("Error", response.message)
                 }
                 const jsonData1 = await response.json()
-                setRequire(jsonData1.Data)
+                setSemesters(jsonData1.List)
             } catch (error) {
                 console.error("Lỗi khi lấy dữ liệu:", error)
             }
         }
+        fetchSemester()
+        fetchMajor()
     }, [])
+    const getSum = (studyProgress) => {
+        let sum = 0
+        studyProgress.forEach((item) => (sum += item.TC))
+        return sum
+    }
+    function calculateTotalCredits(creditsByGroup) {
+        const creditsArray = Object.values(creditsByGroup)
+        const totalCredits = creditsArray.reduce((acc, curr) => acc + curr, 0)
+        return totalCredits
+    }
+    function sumRequired(require) {
+        const totalCredits = require.reduce(
+            (acc, item) => acc + item.required,
+            0
+        )
+        return totalCredits
+    }
+    const getAvg = (studyProgress) => {
+        let sum = 0
+        let tc = 0
+        studyProgress.forEach((item) => {
+            if (item.grade !== "F") {
+                sum += parseFloat(item.points_4) * item.TC
+                tc += item.TC
+            }
+        })
+        return Math.round((sum / tc) * 10) / 10
+    }
     return (
         <View style={{ flex: 1 }}>
             <View
@@ -95,16 +224,127 @@ const StudyProgressScreen = ({ navigation }) => {
                     />
                 </TouchableOpacity>
             </View>
-            <View
-                style={{
-                    height: "20%",
-                    width: "100%",
-                    backgroundColor: "red",
-                    marginBottom: 10,
-                }}
-            ></View>
 
             <ScrollView style={{ flex: 1 }}>
+                <View
+                    style={{
+                        height: 200,
+                        backgroundColor: "white",
+                        borderRadius: 20,
+                        margin: 10,
+                        padding: 10,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <View
+                        style={{
+                            width: "50%",
+                        }}
+                    >
+                        <Text style={{ marginBottom: 10, fontSize: 15 }}>
+                            Tên: {info.student_name}
+                        </Text>
+                        <Text style={{ marginBottom: 10, fontSize: 15 }}>
+                            MSSV: {info.MSSV}
+                        </Text>
+                        <Text style={{ marginBottom: 10, fontSize: 15 }}>
+                            Tổng tín chỉ: {getSum(studyProgress)}
+                        </Text>
+                        <Text style={{ marginBottom: 10, fontSize: 15 }}>
+                            Tổng tín chỉ tích lũy:{" "}
+                            {calculateTotalCredits(creditsPassedByGroup)}
+                        </Text>
+                        <Text style={{ marginBottom: 10, fontSize: 15 }}>
+                            Điểm trung: {getAvg(studyProgress)}
+                        </Text>
+                        <Text style={{ marginBottom: 10, fontSize: 15 }}>
+                            Tình trạng:{" "}
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    color:
+                                        calculateTotalCredits(
+                                            creditsPassedByGroup
+                                        ) <
+                                        17 * maxSemesterId - 10
+                                            ? "red"
+                                            : "green",
+                                }}
+                            >
+                                {calculateTotalCredits(creditsPassedByGroup) <
+                                17 * maxSemesterId
+                                    ? "Chậm tiến độ"
+                                    : "Tiến độ tốt"}
+                            </Text>
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            width: "45%",
+                        }}
+                    >
+                        <View style={styles.container}>
+                            {/* <AnimatedCircularProgress
+                                size={130}
+                                width={20}
+                                fill={Math.min(
+                                    Math.max(
+                                        Math.round(
+                                            (calculateTotalCredits(
+                                                creditsPassedByGroup
+                                            ) /
+                                                sumRequired(require)) *
+                                                100
+                                        ),
+                                        0
+                                    ),
+                                    100
+                                )}
+                                tintColor="#3498db"
+                                backgroundColor="#e6e6e6" // Màu nền
+                                duration={1000} // Thời gian chạy animation (ms)
+                            >
+                                {() => (
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            color: "#3498db",
+                                            fontWeight: "bold",
+                                            position: "absolute",
+                                        }}
+                                    >
+                                        {Math.round(
+                                            (calculateTotalCredits(
+                                                creditsPassedByGroup
+                                            ) /
+                                                sumRequired(require)) *
+                                                100
+                                        )}
+                                        {"%"}
+                                    </Text>
+                                )}
+                            </AnimatedCircularProgress> */}
+                            <CircularProgress
+                                size={120}
+                                progress={Math.min(
+                                    Math.max(
+                                        Math.round(
+                                            (calculateTotalCredits(
+                                                creditsPassedByGroup
+                                            ) /
+                                                sumRequired(require)) *
+                                                100
+                                        ),
+                                        0
+                                    ),
+                                    100
+                                )}
+                                color="#4caf50"
+                            />
+                        </View>
+                    </View>
+                </View>
                 <View
                     style={{
                         flexDirection: "row",
@@ -191,7 +431,9 @@ const StudyProgressScreen = ({ navigation }) => {
                                 </Text>
                             </View>
                             <View style={styles.containerDk}>
-                                <Text style={styles.textHeader}>Trạng thái</Text>
+                                <Text style={styles.textHeader}>
+                                    Trạng thái
+                                </Text>
                             </View>
                         </View>
                         {/* nhóm 1 */}
@@ -239,6 +481,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["1"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) => item.group_id === "1"
@@ -297,6 +540,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["2"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) => item.group_id === "2"
@@ -356,6 +600,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["3"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) => item.group_id === "3"
@@ -466,6 +711,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["4.1"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) =>
@@ -525,6 +771,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["4.2"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) =>
@@ -643,6 +890,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["5.1"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) =>
@@ -702,6 +950,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["5.2"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) =>
@@ -761,6 +1010,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["5.3"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) =>
@@ -820,6 +1070,7 @@ const StudyProgressScreen = ({ navigation }) => {
                                             color: "blue",
                                         }}
                                     >
+                                        {creditsPassedByGroup["5.4"] || 0} {"/"}
                                         {
                                             require.filter(
                                                 (item) =>
@@ -839,7 +1090,67 @@ const StudyProgressScreen = ({ navigation }) => {
                     </>
                 ) : (
                     <View>
-                        <Text>Page 2</Text>
+                        <View
+                            style={{
+                                width: "100%",
+                                flexDirection: "row",
+                                backgroundColor: "#6fc2e3",
+                                height: 50,
+                                alignItems: "center",
+                            }}
+                        >
+                            <View style={styles.containerSTT}>
+                                <Text style={styles.textHeader}>STT</Text>
+                            </View>
+                            <View style={styles.containerMs}>
+                                <Text style={styles.textHeader}>Mã MH</Text>
+                            </View>
+                            <View style={styles.containerHp}>
+                                <Text style={styles.textHeader}>Môn học</Text>
+                            </View>
+                            <View style={styles.containerTc}>
+                                <Text style={styles.textHeader}>
+                                    Điểm hệ 10
+                                </Text>
+                            </View>
+                            <View style={styles.containerMs}>
+                                <Text style={styles.textHeader}>Điểm hệ 4</Text>
+                            </View>
+                            <View style={styles.containerDk}>
+                                <Text style={styles.textHeader}>Điểm chữ</Text>
+                            </View>
+                        </View>
+                        {Object.keys(groupedData).map((semesterId, index) => {
+                            return (
+                                <View key={index}>
+                                    <Text
+                                        style={{
+                                            fontWeight: "bold",
+                                            fontSize: 17,
+                                        }}
+                                    >
+                                        {
+                                            semesters.find(
+                                                (item) => item.id == semesterId
+                                            )?.semester_name
+                                        }
+                                    </Text>
+                                    {groupedData[semesterId].map(
+                                        (subject, index) => {
+                                            return (
+                                                <View key={index}>
+                                                    <RenderItem
+                                                        key={index}
+                                                        stt={index}
+                                                        item={subject}
+                                                    ></RenderItem>
+                                                </View>
+                                            )
+                                        }
+                                    )}
+                                </View>
+                            )
+                        })}
                     </View>
                 )}
             </ScrollView>
@@ -879,7 +1190,7 @@ const styles = StyleSheet.create({
     containerDk: {
         height: "100%",
         justifyContent: "center",
-        width: "10%",
+        width: "15%",
     },
     textHeader: {
         color: "white",

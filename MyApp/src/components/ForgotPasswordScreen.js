@@ -12,17 +12,17 @@ import {
 } from "react-native"
 import { primaryColor } from "../Constants/Color"
 
-const ForgotPassWordScreen = ( { navigation }) => {
+const ForgotPassWordScreen = ({ navigation }) => {
     const [Account, setAccount] = useState("")
     const [isLoading, setLoading] = useState(false)
-    
+
     const handlerSendOTP = async () => {
-        if (!Account ) {
+        if (!Account) {
             Alert.alert("Error", "Hãy nhập đầy đủ thông tin")
             return
         }
         try {
-            const response = await fetch("http://192.168.0.103:3000/sendOTP", {
+            const response = await fetch("http://10.0.2.2:3000/sendOTP", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,7 +35,11 @@ const ForgotPassWordScreen = ( { navigation }) => {
             if (response.status === 200) {
                 // Alert.alert("Success", "gửi mã thành công")
                 setLoading(false)
-                navigation.navigate("Verification", {email:data.Email.Email,token: data.token, Account:Account})
+                navigation.navigate("Verification", {
+                    email: data.Email.Email,
+                    token: data.token,
+                    Account: Account,
+                })
             } else if (response.status === 400) {
                 Alert.alert("Error", data.message)
                 setLoading(false)
@@ -221,7 +225,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         marginRight: 8,
     },
-    
 })
 
 export default ForgotPassWordScreen

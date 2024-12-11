@@ -38,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
 
         setLoading(true)
         try {
-            const response = await fetch("http://192.168.0.103:3000/login", {
+            const response = await fetch("http://10.0.2.2:3000/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -222,7 +222,7 @@ const styles = {
     },
     loginContainer: {
         width: "95%",
-        height: "65%",
+        height: 500,
         padding: 20,
         marginBottom: 20,
         backgroundColor: "white",

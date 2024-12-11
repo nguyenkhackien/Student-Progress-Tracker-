@@ -15,7 +15,7 @@ const DataItem = (props) => {
     const handlePress = async () => {
         try {
             const response = await fetch(
-                `http://192.168.0.103:3000/getDetailData?maLMH=${data.maLMH}&semester_id=${data.semester_id}&nhom=${data.nhom}&searchType=${searchType}`
+                `http://10.0.2.2:3000/getDetailData?maLMH=${data.maLMH}&semester_id=${data.semester_id}&nhom=${data.nhom}&searchType=${searchType}`
             )
 
             if (response.status !== 200) {

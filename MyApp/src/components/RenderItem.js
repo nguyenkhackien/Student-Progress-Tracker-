@@ -3,8 +3,8 @@ import { useState } from "react"
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import AntDesign from "react-native-vector-icons/AntDesign"
 
-const RenderData = (prop) => {
-    const { item } = prop
+const RenderItem = (prop) => {
+    const { stt, item } = prop
     const [isCheck, setIsCheck] = useState(false)
     return (
         <View
@@ -13,10 +13,11 @@ const RenderData = (prop) => {
                 height: 50,
                 alignItems: "center",
                 borderBottomWidth: 1,
+                borderTopWidth: 1,
             }}
         >
             <View style={styles.containerSTT}>
-                <Text style={{ textAlign: "center" }}></Text>
+                <Text style={{ textAlign: "center" }}>{stt + 1}</Text>
             </View>
             <View style={styles.containerMs}>
                 <Text style={{ textAlign: "center" }}>{item.subject_id}</Text>
@@ -25,22 +26,13 @@ const RenderData = (prop) => {
                 <Text style={{ textAlign: "center" }}>{item.subject_name}</Text>
             </View>
             <View style={styles.containerTc}>
-                <Text style={{ textAlign: "center" }}>{item.TC}</Text>
+                <Text style={{ textAlign: "center" }}>{item.points}</Text>
             </View>
             <View style={styles.containerMs}>
-                <Text style={{ textAlign: "center" }}>{item.prerequisite}</Text>
+                <Text style={{ textAlign: "center" }}>{item.points_4}</Text>
             </View>
             <View style={styles.containerDk}>
-                <View
-                    onPress={() => setIsCheck(!isCheck)} // Toggle trạng thái khi nhấn
-                    style={styles.checkbox}
-                >
-                    {item.passed ? (
-                        <AntDesign style={{textAlign:'center'}} name="check" size={24} color="black" />
-                    ) : (
-                        <Text></Text>
-                    )}
-                </View>
+                <Text style={{ textAlign: "center" }}>{item.grade}</Text>
             </View>
         </View>
     )
@@ -97,8 +89,8 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         fontSize: 17,
         color: "black",
-        textAlign: "center", 
+        textAlign: "center",
     },
 })
 
-export default RenderData
+export default RenderItem

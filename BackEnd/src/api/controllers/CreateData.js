@@ -15,7 +15,15 @@ const {
 const connection = require("../../config/database")
 
 function getRandomSubjects(subjects) {
-    const num = Math.floor(Math.random() * (subjects.length - 29)) + 30
+    const minSubjects = 10
+    const maxSubjects = 40
+    const totalSubjects = subjects.length
+    const num =
+        Math.floor(
+            Math.random() *
+                (Math.min(maxSubjects, totalSubjects) - minSubjects + 1)
+        ) + minSubjects
+
     const shuffled = subjects.sort(() => 0.5 - Math.random())
     return shuffled.slice(0, num).map((item) => item.subject_id)
 }
@@ -121,7 +129,7 @@ const createData = (req, res) => {
         workBook.Sheets[workBook.SheetNames[9]]
     )
     // insertData(required, insertData2GroupSubjectRequirements, req, res)
-    // randomSubjectData(students, curriculums, req, res)
+    randomSubjectData(students, curriculums, req, res)
     // insertData(lichhoc, insertData2LichHoc, req, res)
     // insertData( lichthi, insertData2LichThi, req, res )
     // insertData(registration,insertData2Registration,req,res)

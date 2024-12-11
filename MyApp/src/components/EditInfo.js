@@ -21,7 +21,7 @@ const EditInfo = ({ navigation, route }) => {
         else {
             try {
                 const response = await fetch(
-                    "http://192.168.0.103:3000/changePassword",
+                    "http://10.0.2.2:3000/changePassword",
                     {
                         method: "PUT",
                         headers: {
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         fontSize: 17,
         color: "black",
-        textAlign: "center", 
+        textAlign: "center",
         paddingRight: 24,
     },
 })

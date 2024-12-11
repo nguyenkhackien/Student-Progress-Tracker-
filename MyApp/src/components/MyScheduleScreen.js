@@ -28,7 +28,7 @@ export default function MyScheduleScreen() {
         const fetchSemester = async () => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/semesterList`
+                    `http://10.0.2.2:3000/semesterList`
                 )
                 if (response.status !== 200) {
                     Alert.alert("Error", response.message)
@@ -52,7 +52,7 @@ export default function MyScheduleScreen() {
         const getData = async (currentSemesterId) => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/getUserSchedule?account=${Account}&semester_id=${currentSemesterId}`
+                    `http://10.0.2.2:3000/getUserSchedule?account=${Account}&semester_id=${currentSemesterId}`
                 )
 
                 if (response.status !== 200) {
@@ -69,7 +69,7 @@ export default function MyScheduleScreen() {
         const getLichthi = async (currentSemesterId) => {
             try {
                 const response = await fetch(
-                    `http://192.168.0.103:3000/getLichthiByMSSV?account=${Account}&semester_id=${currentSemesterId}`
+                    `http://10.0.2.2:3000/getLichthiByMSSV?account=${Account}&semester_id=${currentSemesterId}`
                 )
                 if (response.status !== 200) {
                     Alert.alert("Error", data.message)
@@ -272,7 +272,6 @@ export default function MyScheduleScreen() {
                         backgroundColor: "white",
                         flex: 1,
                     }}
-
                 >
                     <Text
                         style={{
@@ -284,7 +283,7 @@ export default function MyScheduleScreen() {
                     >
                         Lịch Thi
                     </Text>
-                    <View >
+                    <View>
                         {lichThi.map((item, index) => {
                             return (
                                 <TouchableOpacity
@@ -447,7 +446,6 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: "90%",
-        height: 700,
         padding: 20,
         backgroundColor: "white",
         borderRadius: 10,
