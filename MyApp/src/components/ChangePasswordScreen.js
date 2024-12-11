@@ -8,12 +8,29 @@ import {
     Text,
     ImageBackground,
 } from "react-native"
+import { Ionicons } from "@expo/vector-icons"
 
 const ChangePasswordScreen = ({ navigation, route }) => {
     const { Account } = route.params
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [passwordVisible1, setPasswordVisible] = useState(false)
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible1)
+    }
+    const [passwordVisible2, setPasswordVisible2] = useState(false)
+    const togglePasswordVisibility2 = () => {
+        setPasswordVisible2(!passwordVisible2)
+    }
     const handleChangePassword = async () => {
+        if (!newPassword || !confirmPassword) {
+            Alert.alert("Error", "Hãy nhập đầy đủ thông tin")
+            return
+        }
+        if (newPassword.length < 6 || confirmPassword.length < 6) {
+            Alert.alert("Error", "Mật khẩu phải có ít nhất 6 ký tự")
+            return
+        }
         if (newPassword !== confirmPassword)
             Alert.alert("failed", "mật khẩu không trùng khớp")
         else {
@@ -58,8 +75,23 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                         style={styles.input}
                         onChangeText={setNewPassword}
                         value={newPassword}
-                        placeholder="Nhập mật khẩu mới"
+                        placeholder="mật khẩu"
+                        secureTextEntry={!passwordVisible1}
                     />
+                    <TouchableOpacity
+                        onPress={togglePasswordVisibility}
+                        style={styles.eyeIcon}
+                    >
+                        <Ionicons
+                            name={
+                                passwordVisible1
+                                    ? "eye-outline"
+                                    : "eye-off-outline"
+                            }
+                            size={24}
+                            color="grey"
+                        />
+                    </TouchableOpacity>
                 </View>
                 <Text>Nhập lại mật khẩu</Text>
                 <View style={styles.inputContainer}>
@@ -67,8 +99,23 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                         style={styles.input}
                         onChangeText={setConfirmPassword}
                         value={confirmPassword}
-                        placeholder="Nhập lại mật khẩu"
+                        placeholder="nhập lại mật khẩu"
+                        secureTextEntry={!passwordVisible2}
                     />
+                    <TouchableOpacity
+                        onPress={togglePasswordVisibility2}
+                        style={styles.eyeIcon}
+                    >
+                        <Ionicons
+                            name={
+                                passwordVisible2
+                                    ? "eye-outline"
+                                    : "eye-off-outline"
+                            }
+                            size={24}
+                            color="grey"
+                        />
+                    </TouchableOpacity>
                 </View>
                 <TouchableOpacity
                     style={{
@@ -114,6 +161,10 @@ const styles = StyleSheet.create({
         margin: "auto",
         borderRadius: 10,
         padding: 20,
+    },
+    eyeIcon: {
+        position: "absolute",
+        right: 12,
     },
 })
 export default ChangePasswordScreen

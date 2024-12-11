@@ -9,7 +9,14 @@ const register = async (req, res) => {
         if (existAccount.length > 0) {
             return res.status(400).json({ message: "User already exists" })
         }
-
+        const [existStudent] = await connection
+            .promise()
+            .query("SELECT * FROM Students WHERE MSSV = ?", [Account])
+        if (existStudent.length === 0) {
+            return res
+                .status(400)
+                .json({ message: "Mã số sinh viên không tồn tại" })
+        }
         const hashedPassword = await bcrypt.hash(Password, 5)
         const now = new Date()
 

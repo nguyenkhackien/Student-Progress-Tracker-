@@ -36,7 +36,17 @@ const SignUpScreen = ({ navigation }) => {
             Alert.alert("Error", "Hãy nhập đầy đủ thông tin")
             return
         }
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+        if (!emailRegex.test(Email)) {
+            Alert.alert("Error", "Định dạng email không hợp lệ")
+            return
+        }
 
+        // Kiểm tra độ dài mật khẩu
+        if (Password.length < 6) {
+            Alert.alert("Error", "Mật khẩu phải có ít nhất 6 ký tự")
+            return
+        }
         setLoading(true)
         try {
             console.log("test")
