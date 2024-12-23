@@ -75,7 +75,26 @@ export default function MyScheduleScreen() {
                     Alert.alert("Error", data.message)
                 }
                 const jsonData3 = await response.json()
-                setLichThi(jsonData3.Data)
+                const sortedData = jsonData3.Data.sort((a, b) => {
+                    // Nếu một trong các môn học là BTL thì đưa lên đầu
+                    if (a.HTT === "BTL" && b.HTT !== "BTL") return -1
+                    if (a.HTT !== "BTL" && b.HTT === "BTL") return 1
+
+                    // Nếu cả hai đều có ngày thi, sắp xếp theo ngày thi
+                    if (a.ngaythi && b.ngaythi) {
+                        const [dayA, monthA, yearA] = a.ngaythi.split("/")
+                        const [dayB, monthB, yearB] = b.ngaythi.split("/")
+
+                        const dateA = new Date(`${yearA}-${monthA}-${dayA}`)
+                        const dateB = new Date(`${yearB}-${monthB}-${dayB}`)
+
+                        return dateA - dateB
+                    }
+
+                    // Nếu một trong các môn học không có ngày thi, để nó xuống dưới
+                    return a.ngaythi ? -1 : 1
+                })
+                setLichThi(sortedData)
             } catch (error) {
                 console.error("lỗi khi lấy dữ liệu lich thi", error)
             }
